@@ -51,6 +51,8 @@ Usually it might have other responsibilities:
 
 ### Request-reply pipeline
 
+![alt tag](/misc/request-reply-pipeline.png)
+
 ### Request stages
 
 ### Routing stages
@@ -61,9 +63,11 @@ Usually it might have other responsibilities:
 
 ## Usage
 
-### Single pipeline
+### Create single pipeline
 
-### Multi pipeline
+### Create multi pipeline
+
+### Run pipeline over http server
 
 ### Implementing new stage
  
