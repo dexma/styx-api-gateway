@@ -37,7 +37,7 @@ Usually it might have other responsibilities:
  - Logging
  
  Please do not confuse API gateway with API management solutions, the second one could be a full solution that integrates design, 
- management, documenting and other features around APIs, also could integrate API gateways.
+ management, documenting and other features around APIs, also it could integrate API gateways.
       
 ## Quick start
  
@@ -52,6 +52,12 @@ Usually it might have other responsibilities:
 ### Request-reply pipeline
 
 ![alt tag](/misc/request-reply-pipeline.png)
+
+The main idea of the project is simple, given a bunch of incoming requests from the outside world, they will be handled 
+by a pipeline.
+
+A pipeline has one entry for an http request and one outcome with the resulting http response 
+
 
 ### Request stages
 
