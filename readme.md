@@ -1,4 +1,5 @@
 # Styx Api gateway
+[![Build Status](https://travis-ci.org/dexma/styx-api-gateway.svg?branch=master)](https://travis-ci.org/dexma/styx-api-gateway)
 
 Styx is an async and non-blocking API Gateway developed by dexmatech that handle all incoming request and redirect to internal servers.
 
@@ -36,8 +37,8 @@ Usually it might have other responsibilities:
  - Caching
  - Logging
  
- Please do not confuse API gateway with API management solutions, the second one could be a full solution that integrates design, 
- management, documenting and other features around APIs, also it could integrate API gateways.
+Please do not confuse API gateway with API management solutions, the second one could be a full solution that integrates design, 
+management, documenting and other features around APIs, also it could integrate API gateways.
       
 ## Quick start
  
