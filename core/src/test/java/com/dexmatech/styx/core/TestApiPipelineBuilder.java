@@ -47,7 +47,7 @@ public class TestApiPipelineBuilder {
 	}
 
 	@Test
-	public void shouldCreateMultipleApiGateway() throws Exception {
+	public void shouldCreateMultipleApiPipeline() throws Exception {
 
 		// When
 		ApiPipeline apiPipeline = ApiPipeline.
