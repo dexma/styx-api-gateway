@@ -156,7 +156,7 @@ public abstract class RoutablePipeline {
 		@Override
 		public String toString() {
 			return String.format(
-					"Type : %s with Host : % and Regex path : %s", this.getTypeRoute(), this.host, this.pathRegexPattern.pattern()
+					"Type : '%s' with Host : '%s' and Regex path : '%s'", this.getTypeRoute(), this.host, this.pathRegexPattern.pattern()
 			);
 		}
 
@@ -175,7 +175,7 @@ public abstract class RoutablePipeline {
 
 		@Override
 		public String toString() {
-			return String.format("Type : %s ");
+			return String.format("Type : '%s' ", this.getTypeRoute());
 		}
 
 	}

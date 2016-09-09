@@ -123,7 +123,7 @@ public class TestDefaultRoutingStage {
 		assertThat(result.getFail().getStatusLine().getStatusCode(), is(500));
 		assertThat(result.getFailCause(), instanceOf(AbortedStage.class));
 		assertThat(result.getFailCause().getMessage(),
-				startsWith("Impossible extract url to route"));
+				startsWith("Impossible extract route from header"));
 	}
 
 }

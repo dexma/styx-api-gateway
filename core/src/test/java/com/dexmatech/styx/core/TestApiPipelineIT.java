@@ -62,7 +62,7 @@ public class TestApiPipelineIT {
 		assertThat(reply, notNullValue());
 		assertThat(reply.getStatusLine().getStatusCode(), is(500));
 		assertThat(reportedErrors.size(), is(1));
-		assertThat(reportedErrors.get(0), startsWith("Impossible extract url to route from"));
+		assertThat(reportedErrors.get(0), startsWith("Impossible extract route from header "));
 	}
 
 }
