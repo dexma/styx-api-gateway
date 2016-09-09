@@ -67,17 +67,24 @@ If there is any error or stage fails, pipeline will abort the rest of the pipeli
 
 ### Request stages
 
-In a simple concept a 'request stage' is a simple function that: 
+![alt tag](/misc/request-stage.png)
+
+In a simple concept, and thinking in a functional way, a 'request stage' is a simple function: 
 
     request -> request
     
 For example, an authentication stage could be:
 
+- Given a request with an authentication token as header
+- It will 
 
 
-The reality is a function that:
+Pipeline will apply all stages asynchronously, and also a request stage could success or fail, then reality is that a 'request stage' is a 
+function that:
  
-    request -> [Future[StageResult[Request]]]
+    Request -> [Future[StageResult[Request]]]
+    
+
 
 ### Routing stages
 
