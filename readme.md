@@ -49,6 +49,10 @@ Usually it might have other responsibilities:
 
 ## Main concepts 
 
+### Http proxy
+
+Api gateway is an http proxy as 'nginx'
+
 ### Request-reply pipeline
 
 ![alt tag](/misc/request-reply-pipeline.png)
@@ -73,18 +77,17 @@ In a simple concept, and thinking in a functional way, a 'request stage' is a si
 
     request -> request
     
-For example, an authentication stage could be:
-
-- Given a request with an authentication token as header
-- It will 
-
-
 Pipeline will apply all stages asynchronously, and also a request stage could success or fail, then reality is that a 'request stage' is a 
 function that:
  
     Request -> [Future[StageResult[Request]]]
     
+For example, an authentication stage could be:
 
+- Given a request with an authentication token client as header
+- The function check if is a valid token
+- Retrieve privileges associated to this token
+- 
 
 ### Routing stages
 
