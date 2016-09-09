@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="warn">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{ISO8601}][%highlight{%level}][[%c{1.}][%thread][mdc: %X] %m %n "/>
+        </Console>
+        <Async name="Async">
+            <AppenderRef ref="Console"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger level="warn" name="org.mongodb"/>
+        <Root level="debug">
+            <AppenderRef ref="Async"/>
+        </Root>
+    </Loggers>
+</Configuration>
