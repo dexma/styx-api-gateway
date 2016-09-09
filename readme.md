@@ -21,7 +21,7 @@ term is strongly associated to microservice-based architectures.
 In a simple concept, the main responsibilities of an API gateways are filter and redirect between external client requests and internal 
 APIs.
 
-![alt tag](/misc/api_gateway.png)
+![alt tag](/misc/api-gateway.png)
 
 Usually it might have other responsibilities:
  
@@ -51,7 +51,10 @@ Usually it might have other responsibilities:
 
 ### Http proxy
 
-Api gateway is an http proxy as 'nginx'
+![alt tag](/misc/reverse-proxy.png)
+
+From a global vision an api gateway is an http proxy as 'nginx', a facade that acts as a front-end to control and protect our private 
+network.
 
 ### Request-reply pipeline
 
@@ -67,7 +70,7 @@ One single pipeline will manage all incoming request in three different phases:
 - Second, apply routing stage
 - Third, apply response stages
 
-If there is any error or stage fails, pipeline will abort the rest of the pipeline and immediately will reply with an http response 
+If there is any error or stage fails, pipeline will abort the rest of the pipeline and immediately will reject the request
 
 ### Request stages
 
@@ -85,9 +88,14 @@ function that:
 For example, an authentication stage could be:
 
 - Given a request with an authentication token client as header
-- The function check if is a valid token
-- Retrieve privileges associated to this token
-- 
+- The function check if it is a valid token
+    - If is not valid then abort stage, request will be rejected 
+    - If is valid
+        - Retrieve privileges associated to this token
+        - Add privilege headers to the current request
+- Final return the result:
+    - Success with a request
+    - Fail( aborting immediately the pipeline flow) with a response
 
 ### Routing stages
 
