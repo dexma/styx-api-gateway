@@ -99,6 +99,11 @@ For example, an authentication stage could be:
 
 ### Routing stages
 
+After request has passed all request stages then is the turn of routing stage.
+
+This is the proxy stage, it will take the request and it will create a new one, redirecting to internal servers in order to 
+make the real request requested by the client.
+
 ### Response stages
 
 ### Http server
