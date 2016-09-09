@@ -6,10 +6,10 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
 
 
 - [What is an API Gateway?](#what-is-an-api-gateway)
-- [Quick start](#what-is-an-api-gateway)
-- [Main concepts](#what-is-an-api-gateway)
-- [Usage](#what-is-an-api-gateway)
-- [Creators](#what-is-an-api-gateway)
+- [Quick start](#quick-start)
+- [Main concepts](#main-concepts)
+- [Usage](#usage)
+- [Creators](#creators)
 - [Contributing](#contributing)
 
 
@@ -39,8 +39,33 @@ Usually it might have other responsibilities:
  Please do not confuse API gateway with API management solutions, the second one could be a full solution that integrates design, 
  management, documenting and other features around APIs, also could integrate API gateways.
       
-      
+## Quick start
  
+### Installation
+
+### Run api gateway
+ 
+## Quick start 
+
+## Main concepts 
+
+### Request-reply pipeline
+
+### Request stages
+
+### Routing stages
+
+### Response stages
+
+### Http server
+
+## Usage
+
+### Single pipeline
+
+### Multi pipeline
+
+### Implementing new stage
  
 ## Contributing
 
