@@ -58,8 +58,26 @@ by a pipeline.
 
 A pipeline has one entry for an http request and one outcome with the resulting http response 
 
+One single pipeline will manage all incoming request in three different phases:
+- First, apply request stages
+- Second, apply routing stage
+- Third, apply response stages
+
+If there is any error or stage fails, pipeline will abort the rest of the pipeline and immediately will reply with an http response 
 
 ### Request stages
+
+In a simple concept a 'request stage' is a simple function that: 
+
+    request -> request
+    
+For example, an authentication stage could be:
+
+
+
+The reality is a function that:
+ 
+    request -> [Future[StageResult[Request]]]
 
 ### Routing stages
 
@@ -76,6 +94,12 @@ A pipeline has one entry for an http request and one outcome with the resulting 
 ### Run pipeline over http server
 
 ### Implementing new stage
+
+### Handling with errors
+
+### Resiliency
+
+### Monitoring
  
 ## Contributing
 
