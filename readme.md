@@ -9,7 +9,22 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
 - [What is an API Gateway?](#what-is-an-api-gateway)
 - [Quick start](#quick-start)
 - [Main concepts](#main-concepts)
+    - [Http proxy](#http-proxy)
+    - [Request-reply pipeline](#request-reply-pipeline)
+    - [Request stages](#request-stages)
+    - [Routing stage](#routing-stage)
+    - [Response stages](#response-stages)
+    - [Http server](#http-server)
 - [Usage](#usage)
+    - [Create single pipeline](#create-single-pipeline)
+    - [Create multi pipeline](#create-multi-pipeline)
+    - [Run pipeline over http server](#run-pipeline-over-http-server)
+    - [Implementing stage](#implementing-stage)
+    - [Implementing complex stage](#implementing-complex-stage)
+    - [Handling with errors](#handling-with-errors)
+    - [Resiliency](#resiliency)
+    - [Monitoring](#monitoring)
+    - [Changing http server](#changing-http-server)
 - [Creators](#creators)
 - [Contributing](#contributing)
 
@@ -45,10 +60,17 @@ management, documenting and other features around APIs, also it could integrate 
 ### Installation
 
 ### Run api gateway
- 
-## Quick start 
 
-## Main concepts 
+## Main concepts
+
+Styx Api gateway tries to make easy integrate your internal APIs encouraging:
+
+- Async: All actions are made using java completable futures
+- NIO (non blocking IO): All http calls are implemented using an http nio client 
+- Functional programing: We are not functional jihadists, but we use functions, immutability ...
+
+Then, although for a basic use you don't need to do, if you extend the framework, please, don't try to use imperative programming, try to 
+use nio drivers (if it is possible) and compose futures.
 
 ### Http proxy
 
@@ -71,7 +93,10 @@ One single pipeline will manage all incoming request in three different phases:
 - Second, apply routing stage
 - Third, apply response stages
 
-If there is any error or stage fails, pipeline will abort the rest of the pipeline and immediately will reject the request
+If there is any error or stage fails, pipeline will abort the rest of the pipeline and immediately will reject the request.
+
+There is no shared context or pipeline context, if you are thinking in some way about servlet filters, it is all about requests and 
+responses. 
 
 ### Request stages
 
@@ -98,16 +123,47 @@ For example, an authentication stage could be:
     - Success with a request
     - Fail( aborting immediately the pipeline flow) with a response
 
-### Routing stages
+### Routing stage
 
 After request has passed all request stages then is the turn of routing stage.
+
+The the simple firm is:
+
+    Request -> [Future[StageResult[Response]]]
 
 This is the proxy stage, it will take the request and it will create a new one, redirecting to internal servers in order to 
 make the real request for the client.
 
+Styx provide a default and basic implementation of routing stage, is totally async and nio, and uses a header to route:
+    
+    X-routing-url
+    
+But if you need to compose different internal calls or something more complex you will need to implement a new one.
+
 ### Response stages
 
+In that point your request have been handled, and you have your response ready to be sent to the client.
+
+If you need to add cookies, headers or anything you want to do in the response, this is the way:
+ 
+    Response -> [Future[StageResult[Response]]]
+
+
 ### Http server
+
+In order to handle real http request and responses, we will need a real http server in front over our pipelines. Styx uses 
+[Grizzly](https://grizzly.java.net/) as default http server.
+
+![alt tag](/misc/grizzly-adapter.png)
+
+Run pipelines in an http server is only provide a traduction/mapper :
+
+    http server request implementation -> styx request
+And:
+
+    styx response -> http server response implementation
+    
+Then, if you want to run styx over another server, add this mappers and make us a pull request.
 
 ## Usage
 
@@ -117,13 +173,17 @@ make the real request for the client.
 
 ### Run pipeline over http server
 
-### Implementing new stage
+### Implementing stage
+
+### Implementing complex stage
 
 ### Handling with errors
 
 ### Resiliency
 
 ### Monitoring
+
+### Changing http server
 
 ## Creators
  
