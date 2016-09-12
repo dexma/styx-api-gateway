@@ -387,14 +387,18 @@ RequestPipelineStage stage = AuthenticationStage
 
 ## Authors
 
-* **Albert Ortiz Llousas** - *Initial work* 
+* **Albert Ortiz Llousas** - *Initial work*  (albert.ortizl@gmail.com)
 * **Dexma development team**
+
+
  
 ## Contributing
 
 Of course, we encourage the community to contribute with us and add specific modules and integrations with 3rd party systems!
 
 Bug reporting and Pull Requests are welcome.
+
+See https://github.com/dexma/styx-api-gateway/contributors
 
 
 
