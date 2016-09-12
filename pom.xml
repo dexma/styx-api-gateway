@@ -285,7 +285,7 @@
     </licenses>
     <scm>
         <connection>scm:git:git://github.com/dexma/styx-api-gateway.git</connection>
-        <developerConnection>scm:git:git@github.com:albertortizl/dexma/styx-api-gateway.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:dexma/styx-api-gateway.git</developerConnection>
         <url>https://github.com/dexma/styx-api-gateway</url>
       <tag>1.0.0</tag>
   </scm>
