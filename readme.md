@@ -8,6 +8,7 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
 
 - [What is an API Gateway?](#what-is-an-api-gateway)
 - [Quick start](#quick-start)
+    - [Installation](###installation)
 - [Main concepts](#main-concepts)
     - [Http proxy](#http-proxy)
     - [Request-reply pipeline](#request-reply-pipeline)
@@ -58,6 +59,22 @@ management, documenting and other features around APIs, also it could integrate 
 ## Quick start
  
 ### Installation
+
+Maven:
+```xml
+<dependency>
+  <groupId>com.dexmatech.styx</groupId>
+  <artifactId>styx-core</artifactId>
+  <version>1.0.0</version>
+</dependency>
+
+<dependency>
+  <groupId>com.dexmatech.styx</groupId>
+  <artifactId>grizzly-adapter</artifactId>
+  <version>1.0.0</version>
+</dependency>
+
+```
 
 ### Run api gateway
 

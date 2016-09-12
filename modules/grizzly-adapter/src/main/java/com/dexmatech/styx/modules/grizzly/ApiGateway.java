@@ -4,6 +4,7 @@ import com.dexmatech.styx.core.ApiPipeline;
 import com.dexmatech.styx.core.http.HttpResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -35,8 +36,11 @@ public class ApiGateway {
 							.setMaxPoolSize(5)
 			);
 
+	@Getter
 	private final HttpServer httpServer;
+	@Getter
 	private final ExecutorService executorService;
+	@Getter
 	private final ApiPipeline pipeline;
 
 	public static Builder runningOverGrizzly() {

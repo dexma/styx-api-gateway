@@ -17,6 +17,18 @@
         <module>core</module>
         <module>modules</module>
     </modules>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <dependencyManagement>
         <dependencies>
             <!-- Logging -->
@@ -226,6 +238,74 @@
 
     </dependencies>
 
+    <!-- https://oss.sonatype.org -->
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.4</version>
+                        <configuration>
+                            <aggregate>false</aggregate>
+                            <show>private</show>
+                            <nohelp>true</nohelp>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <!--<executions>-->
+                        <!--<execution>-->
+                        <!--<id>install</id>-->
+                        <!--<goals>-->
+                        <!--<goal>aggregate</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>site</phase>-->
+                        <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                        <!--&lt;!&ndash;&lt;!&ndash; Specific configuration for the aggregate report &ndash;&gt;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+                        <!--</execution>-->
+                        <!--</executions>-->
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -269,6 +349,12 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+            </plugin>
+
         </plugins>
     </build>
     <developers>
