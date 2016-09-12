@@ -173,12 +173,12 @@ Styx uses internal dsl's and don't use magics as other frameworks, it means that
 
 All incoming request will be handled by this:
 
-```Java
+```java
 
 // create http request-reply pipeline
 HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
 				.pipeline()
-				.applyingPreRoutingStage(myOwnImplementationOfRouteSelector())
+				.applyingPreRoutingStage("server-discover",myOwnImplementationOfRouteSelector())
 				.applyingDefaultRoutingStage()
 				.build();
 
@@ -195,15 +195,15 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
    - Request with path '/some_path' will have rate limit but no authentication
    - The rest of your requests will be authenticated and rate-limited
    
-```Java
+```java
 
 	// We create our pipelines
 		RoutablePipeline pipelineWithAuthentication =
 				matchingRequestsByHost("X").using(
 						HttpRequestReplyPipeline
 								.pipeline()
-								.applyingPreRoutingStage(myAuthentication())
-								.applyingPreRoutingStage(myOwnImplementationOfRouteSelector())
+								.applyingPreRoutingStage("authentication", myAuthentication())
+								.applyingPreRoutingStage("server-discover",myOwnImplementationOfRouteSelector())
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -212,8 +212,8 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 				matchingRequestsByPathRegexPattern("/some_path.*").using(
 						HttpRequestReplyPipeline
 								.pipeline()
-								.applyingPreRoutingStage(myRateLimit())
-								.applyingPreRoutingStage(myOwnImplementationOfRouteSelector())
+								.applyingPreRoutingStage("rate-limit", myRateLimit())
+								.applyingPreRoutingStage("server-discover",myOwnImplementationOfRouteSelector())
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -222,9 +222,9 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 				defaultPipeline().using(
 						HttpRequestReplyPipeline
 								.pipeline()
-								.applyingPreRoutingStage(myAuthentication())
-								.applyingPreRoutingStage(myRateLimit())
-								.applyingPreRoutingStage(myOwnImplementationOfRouteSelector())
+								.applyingPreRoutingStage("authentication", myAuthentication())
+								.applyingPreRoutingStage("rate-limit", myRateLimit())
+								.applyingPreRoutingStage("server-discover", myOwnImplementationOfRouteSelector())
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -242,13 +242,13 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 
 In a simplest way :
 
-```Java
+```java
  ApiGateway.runningOverGrizzly().withPipeline(apiPipeline).build().startAndKeepRunning();
 ```
 
 Or if you want to config some behaviour :
 
-```Java
+```java
  ApiGateway
         .runningOverGrizzly()
         .withDefaultServerRunningOnPort(8081)
@@ -259,6 +259,21 @@ Or if you want to config some behaviour :
 ```
 
 ### Implementing stage
+
+How we said before, an stage is a function:
+
+        Request -> [Future[StageResult[Response]]]
+        
+Then, let's code a simple request stage that add some custom headers
+
+```java
+
+RequestPipelineStage stage = r -> CompletableFuture
+                .completedFuture(
+                        StageResult.stageSuccessWith(r.addHeader("X-some-header", "some-value"))
+                        );
+
+```
 
 ### Implementing complex stage
 
