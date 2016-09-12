@@ -173,7 +173,7 @@ Styx uses internal dsl's and don't use magics as other frameworks, it means that
 
 All incoming request will be handled by this:
 
-```
+```Java
 
 // create http request-reply pipeline
 HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
@@ -195,7 +195,7 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
    - Request with path '/some_path' will have rate limit but no authentication
    - The rest of your requests will be authenticated and rate-limited
    
-```
+```Java
 
 	// We create our pipelines
 		RoutablePipeline pipelineWithAuthentication =
@@ -242,13 +242,13 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 
 In a simplest way :
 
-```
+```Java
  ApiGateway.runningOverGrizzly().withPipeline(apiPipeline).build().startAndKeepRunning();
 ```
 
 Or if you want to config some behaviour :
 
-```
+```Java
  ApiGateway
         .runningOverGrizzly()
         .withDefaultServerRunningOnPort(8081)
