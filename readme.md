@@ -156,7 +156,7 @@ In order to handle real http request and responses, we will need a real http ser
 
 ![alt tag](/misc/grizzly-adapter.png)
 
-Run pipelines in an http server is only provide a traduction/mapper :
+It is so simple, running pipelines in an http servers is a mapping between:
 
     http server request implementation -> styx request
 And:
@@ -167,11 +167,96 @@ Then, if you want to run styx over another server, add this mappers and make us 
 
 ## Usage
 
+Styx uses internal dsl's and don't use magics as other frameworks, it means that if you are a java developer you need to code.
+
 ### Create single pipeline
+
+All incoming request will be handled by this:
+
+```
+
+// create http request-reply pipeline
+HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
+				.pipeline()
+				.applyingPreRoutingStage(myOwnImplementationOfRouteSelector())
+				.applyingDefaultRoutingStage()
+				.build();
+
+// create single api pipeline
+ApiPipeline apiPipeline = ApiPipeline.singlePipeline().using(pipeline).build();
+
+```
 
 ### Create multi pipeline
 
+Sometimes you will need more than one pipeline to handle you request, for example you could have:
+
+   - Requests from host 'X' will have authentication 1 by token
+   - Request with path '/some_path' will have rate limit but no authentication
+   - The rest of your requests will be authenticated and rate-limited
+   
+```
+
+	// We create our pipelines
+		RoutablePipeline pipelineWithAuthentication =
+				matchingRequestsByHost("X").using(
+						HttpRequestReplyPipeline
+								.pipeline()
+								.applyingPreRoutingStage(myAuthentication())
+								.applyingPreRoutingStage(myOwnImplementationOfRouteSelector())
+								.applyingDefaultRoutingStage()
+								.build()
+				).build();
+
+		RoutablePipeline pipelineWithRateLimit =
+				matchingRequestsByPathRegexPattern("/some_path.*").using(
+						HttpRequestReplyPipeline
+								.pipeline()
+								.applyingPreRoutingStage(myRateLimit())
+								.applyingPreRoutingStage(myOwnImplementationOfRouteSelector())
+								.applyingDefaultRoutingStage()
+								.build()
+				).build();
+
+		RoutablePipeline defaultPipeline =
+				defaultPipeline().using(
+						HttpRequestReplyPipeline
+								.pipeline()
+								.applyingPreRoutingStage(myAuthentication())
+								.applyingPreRoutingStage(myRateLimit())
+								.applyingPreRoutingStage(myOwnImplementationOfRouteSelector())
+								.applyingDefaultRoutingStage()
+								.build()
+				).build();
+
+		// create multi pipeline
+		ApiPipeline apiPipeline = ApiPipeline
+				.multiPipeline()
+				.addPipeline(pipelineWithAuthentication)
+				.addPipeline(pipelineWithRateLimit)
+				.addPipeline(defaultPipeline).build();
+
+```
+
 ### Run pipeline over http server
+
+In a simplest way :
+
+```
+ ApiGateway.runningOverGrizzly().withPipeline(apiPipeline).build().startAndKeepRunning();
+```
+
+Or if you want to config some behaviour :
+
+```
+ ApiGateway
+        .runningOverGrizzly()
+        .withDefaultServerRunningOnPort(8081)
+        .withExecutorService(Executors.newFixedThreadPool(4))
+        .withPipeline(apiPipeline)
+        .build()
+        .startAndKeepRunning();
+```
 
 ### Implementing stage
 
