@@ -25,7 +25,7 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
     - [Resiliency](#resiliency)
     - [Monitoring](#monitoring)
     - [Changing http server](#changing-http-server)
-- [Creators](#creators)
+- [Authors](#authors)
 - [Contributing](#contributing)
 
 
@@ -260,9 +260,9 @@ Or if you want to config some behaviour :
 
 ### Implementing stage
 
-How we said before, an stage is a function:
+How we said before, a request stage is a function:
 
-        Request -> [Future[StageResult[Response]]]
+        Request -> [Future[StageResult[Request]]]
         
 Then, let's code a simple request stage that add some custom headers
 
@@ -277,15 +277,118 @@ RequestPipelineStage stage = r -> CompletableFuture
 
 ### Implementing complex stage
 
+Previous sample is so easy, but it is not realistic, normally you will want to access to a remote repository, add dependencies or do more 
+complicated things, then let' s do an more complex sample.
+  
+We will code an authentication stage, to reach that, we will codify a simple DSL that constructs our final function.
+ 
+```java
+
+import com.dexmatech.styx.core.http.HttpResponse;
+import com.dexmatech.styx.core.pipeline.stages.AbortedStage;
+import com.dexmatech.styx.core.pipeline.stages.StageResult;
+
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * Created by aortiz on 9/08/16.
+ */
+
+public class AuthenticationStage {
+
+	public static final String DEFAULT_TOKEN_HEADER = "X-token";
+
+	public interface AuthenticationService {
+		boolean authenticate(String token);
+	}
+
+	public static Builder usingDefaults() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private AuthenticationService authenticationService;
+		private Optional<String> tokenHeader = Optional.empty();
+
+		public Builder authenticatingWith(AuthenticationService authenticationService) {
+			this.authenticationService = authenticationService;
+			return this;
+		}
+
+		public Builder usingHeaderToken(String tokenHeader) {
+			this.tokenHeader = Optional.ofNullable(tokenHeader);
+			return this;
+		}
+
+		public RoutingStage build() {
+			Objects.requireNonNull(authenticationService, "Please provide an authentication service");
+			String headerName = tokenHeader.orElse(DEFAULT_TOKEN_HEADER);
+			return httpRequest -> {
+
+				Optional<String> token = Optional.ofNullable(httpRequest.getHeaders().get(headerName));
+				return token.map(t -> {
+
+					if (authenticationService.authenticate(t)) {
+						return StageResult.completeStageSuccessfullyWith(httpRequest);
+					} else {
+						return StageResult.completeStageFailingWith(
+								HttpResponse.forbidden(), AbortedStage.because("Invalid token")
+						);
+					}
+				}).orElseGet(() ->
+						StageResult.completeStageFailingWith(
+								HttpResponse.internalServerError(), AbortedStage.because("Token not found")
+						)
+				);
+
+			};
+
+		}
+
+	}
+
+}
+
+```
+
+With a resulting usage:
+
+```java
+
+AuthenticationService authenticationService = new MyAuthenticationImpl(config, ...); 
+
+RequestPipelineStage stage = AuthenticationStage
+				.usingDefaults()
+				.authenticatingWith()
+				.usingHeaderToken("X-my-security-header")
+				.build();
+
+```
+
+*Note: this is only a sample in order to view how to code a simple DSL to encapsulate an stage creation.*
+
 ### Handling with errors
+
+    TODO
 
 ### Resiliency
 
+    TODO
+
 ### Monitoring
+
+    TODO
 
 ### Changing http server
 
-## Creators
+    TODO
+
+## Authors
+
+* **Albert Ortiz Llousas** - *Initial work* 
+* **Dexma development team**
  
 ## Contributing
 

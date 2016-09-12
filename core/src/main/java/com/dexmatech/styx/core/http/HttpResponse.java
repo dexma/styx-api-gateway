@@ -18,6 +18,7 @@ import java.util.function.Function;
 public class HttpResponse extends HttpMessage {
 	public static final HttpResponse OK = new HttpResponse(StatusLine.ok(), Headers.empty(), Optional.empty());
 	public static final HttpResponse INTERNAL_SERVER_ERROR = new HttpResponse(StatusLine.INTERNAL_SERVER_ERROR, Headers.empty(), Optional.empty());
+	public static final HttpResponse FORBIDDEN = new HttpResponse(StatusLine.FORBIDDEN, Headers.empty(), Optional.empty());
 	private final StatusLine statusLine;
 
 	private HttpResponse(StatusLine statusLine, Headers headers, Optional<InputStream> messageBody) {
@@ -34,6 +35,10 @@ public class HttpResponse extends HttpMessage {
 	}
 
 	public static HttpResponse internalServerError() {
+		return INTERNAL_SERVER_ERROR;
+	}
+
+	public static HttpResponse forbidden() {
 		return INTERNAL_SERVER_ERROR;
 	}
 

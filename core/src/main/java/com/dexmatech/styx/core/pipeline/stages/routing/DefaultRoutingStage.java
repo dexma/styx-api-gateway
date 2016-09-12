@@ -21,7 +21,7 @@ public class DefaultRoutingStage {
 
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
-	// TODO: this var m,ust be readed from constants
+	// TODO: this var must be readed from constants
 	public static final String DEFAULT_HEADER_USED_TO_ROUTE = "X-routing-url";
 
 	public static final int REQUEST_TIMEOUT_IN_MS = 5000;
