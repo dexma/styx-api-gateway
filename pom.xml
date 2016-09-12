@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dexmatech.styx</groupId>
     <artifactId>styx</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>Styx API Gateway</name>
     <description>Styx is an async and non-blocking API Gateway.</description>
@@ -111,7 +109,7 @@
             <dependency>
                 <groupId>com.dexmatech.styx</groupId>
                 <artifactId>styx-core</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
 
             <!-- Core Jackson abstractions, basic JSON streaming API implementation -->
@@ -289,5 +287,6 @@
         <connection>scm:git:git://github.com/dexma/styx-api-gateway.git</connection>
         <developerConnection>scm:git:ssh://github.com:dexma/styx-api-gateway.git</developerConnection>
         <url>https://github.com/dexma/styx-api-gateway</url>
-    </scm>
+      <tag>1.0.0</tag>
+  </scm>
 </project>
