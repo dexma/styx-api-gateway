@@ -8,6 +8,11 @@
     <artifactId>styx</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
+
+    <name>Styx API Gateway</name>
+    <description>Styx is an async and non-blocking API Gateway.</description>
+    <url>https://github.com/dexma/styx-api-gateway</url>
+
     <modules>
         <module>core</module>
         <module>modules</module>
@@ -261,6 +266,23 @@
             </plugin>
         </plugins>
     </build>
-
-
+    <developers>
+        <developer>
+            <name>Albert Ortiz Llousas</name>
+            <email>albert.ortizl@gmail.com</email>
+            <organization>Dexmatech</organization>
+            <organizationUrl>http://www.dexmatech.com/</organizationUrl>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git://github.com/dexma/styx-api-gateway.git</connection>
+        <developerConnection>scm:git:ssh://github.com:dexma/styx-api-gateway.git</developerConnection>
+        <url>https://github.com/dexma/styx-api-gateway</url>
+    </scm>
 </project>
