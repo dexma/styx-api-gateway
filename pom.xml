@@ -239,6 +239,7 @@
     <!-- https://oss.sonatype.org -->
     <profiles>
         <profile>
+            <!-- Open Source Software Repository Hosting (OSSRH) -->
             <id>ossrh</id>
             <build>
                 <plugins>
