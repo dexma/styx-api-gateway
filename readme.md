@@ -20,6 +20,7 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
     - [Create single pipeline](#create-single-pipeline)
     - [Create multi pipeline](#create-multi-pipeline)
     - [Run pipeline over http server](#run-pipeline-over-http-server)
+    - [Default routing stage](#default-routing-stage)
     - [Implementing stage](#implementing-stage)
     - [Implementing complex stage](#implementing-complex-stage)
     - [Handling with errors](#handling-with-errors)
