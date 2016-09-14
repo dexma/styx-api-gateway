@@ -21,7 +21,7 @@ public class RequestResponseMappers {
 
 	public static HttpRequest asPipelineRequest(Request grizzlyRequest) throws URISyntaxException {
 		RequestLine requestLine = RequestLine.from(
-				grizzlyRequest.getMethod().getMethodString(), new URI(grizzlyRequest.getRequestURI()), grizzlyRequest.getAuthType()
+				grizzlyRequest.getMethod().getMethodString(), grizzlyRequest.getRequestURI(), grizzlyRequest.getAuthType()
 		);
 		return HttpRequest.from(
 				requestLine, extractAndConvertHeaders(grizzlyRequest), grizzlyRequest.getInputStream()

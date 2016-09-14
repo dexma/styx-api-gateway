@@ -6,6 +6,7 @@ import com.dexmatech.styx.core.pipeline.stages.IdentifiedStage;
 import com.dexmatech.styx.core.pipeline.stages.PipelineStage;
 import com.dexmatech.styx.core.pipeline.stages.StageResult;
 import com.dexmatech.styx.core.pipeline.stages.request.RequestPipelineStage;
+import com.dexmatech.styx.core.pipeline.stages.request.StaticHostOnRoutingHeaderStage;
 import com.dexmatech.styx.core.pipeline.stages.response.ResponsePipelineStage;
 import com.dexmatech.styx.core.pipeline.stages.routing.DefaultRoutingStage;
 import com.dexmatech.styx.core.pipeline.stages.routing.RoutingStage;
@@ -67,6 +68,11 @@ public class HttpRequestReplyPipeline {
 		//			stages.forEach(requestPipelineStages::add);
 		//			return this;
 		//		}
+
+		public Builder applyingStaticRouteGenerationTo(String host) {
+			this.applyingPreRoutingStage("static-routing", StaticHostOnRoutingHeaderStage.staticRoutingTo(host));
+			return this;
+		}
 
 		public Builder applyingDefaultRoutingStage() {
 			this.routingStage = DefaultRoutingStage.usingDefaults().build();

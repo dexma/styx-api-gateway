@@ -83,7 +83,7 @@ public class TestDefaultRoutingStageIT {
 				.DEFAULT_HEADER_USED_TO_ROUTE, "http://localhost:" + server.getRunningPort()));
 		RoutingStage stage = DefaultRoutingStage
 				.usingDefaults()
-				.usingDefaultClientAndConfig(new DefaultAsyncHttpClientConfig.Builder().setRequestTimeout(1000).build())
+				.usingDefaultClientwithConfig(new DefaultAsyncHttpClientConfig.Builder().setRequestTimeout(1000).build())
 				.build();
 		// when
 		server.runAndKill(() -> {
@@ -103,7 +103,7 @@ public class TestDefaultRoutingStageIT {
 				.DEFAULT_HEADER_USED_TO_ROUTE, "http://localhost:5555"));
 		RoutingStage stage = DefaultRoutingStage
 				.usingDefaults()
-				.usingDefaultClientAndConfig(new DefaultAsyncHttpClientConfig.Builder().build())
+				.usingDefaultClientwithConfig(new DefaultAsyncHttpClientConfig.Builder().build())
 				.build();
 		// when
 
@@ -115,5 +115,6 @@ public class TestDefaultRoutingStageIT {
 		assertThat(result.getFailCause().getMessage(), is("Connection refused: localhost/127.0.0.1:5555"));
 
 	}
+
 
 }

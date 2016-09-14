@@ -13,6 +13,7 @@
     <modules>
         <module>grizzly-adapter</module>
         <module>environment</module>
+        <module>server-side-discovery</module>
     </modules>
 
 

@@ -8,7 +8,7 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
 
 - [What is an API Gateway?](#what-is-an-api-gateway)
 - [Quick start](#quick-start)
-    - [Installation](###installation)
+    - [Installation](#installation)
 - [Main concepts](#main-concepts)
     - [Http proxy](#http-proxy)
     - [Request-reply pipeline](#request-reply-pipeline)
@@ -26,6 +26,7 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
     - [Resiliency](#resiliency)
     - [Monitoring](#monitoring)
     - [Changing http server](#changing-http-server)
+- [Modules](#modules)
 - [Authors](#authors)
 - [Contributing](#contributing)
 
@@ -65,13 +66,13 @@ Maven:
 <dependency>
   <groupId>com.dexmatech.styx</groupId>
   <artifactId>styx-core</artifactId>
-  <version>1.0.0</version>
+  <version>VERSION</version>
 </dependency>
 
 <dependency>
   <groupId>com.dexmatech.styx</groupId>
   <artifactId>grizzly-adapter</artifactId>
-  <version>1.0.0</version>
+  <version>VERSION</version>
 </dependency>
 
 ```
@@ -195,7 +196,7 @@ All incoming request will be handled by this:
 // create http request-reply pipeline
 HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
 				.pipeline()
-				.applyingPreRoutingStage("server-discover",myOwnImplementationOfRouteSelector())
+				.applyingStaticRouteGenerationTo("internal.service.dmz")
 				.applyingDefaultRoutingStage()
 				.build();
 
@@ -220,7 +221,7 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 						HttpRequestReplyPipeline
 								.pipeline()
 								.applyingPreRoutingStage("authentication", myAuthentication())
-								.applyingPreRoutingStage("server-discover",myOwnImplementationOfRouteSelector())
+								.applyingStaticRouteGenerationTo("internal.service.dmz")
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -230,7 +231,7 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 						HttpRequestReplyPipeline
 								.pipeline()
 								.applyingPreRoutingStage("rate-limit", myRateLimit())
-								.applyingPreRoutingStage("server-discover",myOwnImplementationOfRouteSelector())
+								.applyingStaticRouteGenerationTo("internal.service.dmz")
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -241,7 +242,7 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 								.pipeline()
 								.applyingPreRoutingStage("authentication", myAuthentication())
 								.applyingPreRoutingStage("rate-limit", myRateLimit())
-								.applyingPreRoutingStage("server-discover", myOwnImplementationOfRouteSelector())
+								.applyingStaticRouteGenerationTo("internal.service.dmz")
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -253,6 +254,65 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 				.addPipeline(pipelineWithRateLimit)
 				.addPipeline(defaultPipeline).build();
 
+```
+
+### Default routing stage
+
+Default routing stage is an NIO stage that acts as a proxy an makes the real requests to internal servers.
+ 
+As default it only expects that the incoming request has a custom header to make the real route like:
+
+        X-routing-url: http://internal.server.dmz:8080/api  
+
+Then, you can do:
+ 
+1. Use a default static implementation, it will redirect all request to same host:
+
+```java
+ HttpRequestReplyPipeline
+   				.pipeline()
+   				.applyingStaticRouteGenerationTo("internal.service.dmz") 
+   		...
+```
+Then if a request enter with a requested uri as 
+
+    http://www.mydomain.com:8080/api
+    
+This stage will add a custom header as 
+
+    http://internal.service.dmz:8080/api
+    
+2. Create your own creation of routing with your own logic, remember to add **X-routing-url** custom header 
+
+3. A module was added with [Server side discovery](/modules/server-side-discovery/readme.md) 
+
+Also, you can override some parameters of default routing implementation:
+
+
+```java
+ RoutingStage routingstage = DefaultRoutingStage
+ 				.usingDefaults()
+ 				// if you want to change header used to route
+ 				.usingHeaderToRoute("X-my-custom-route")
+ 				// if you want to change how route is extracted, maybe you don't want to use a header
+ 				.usingStrategyToRoute(ROUTE_EXTRACTOR)
+ 				// if you want to make transformations on response after proxy success
+ 				// for example copy some headers from request to response
+ 				.applyAfterRoutingSuccess((httpRequest, httpResponse) -> httpResponse.addHeader("X",httpRequest.getHeaders().get("X")))
+ 				// if you want to provide an custom config
+ 				.usingDefaultClientAndConfig(new DefaultAsyncHttpClientConfig.Builder().build())
+ 				.build();
+ 				
+// create http request-reply pipeline
+HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
+				.pipeline()
+				.applyingStaticRouteGenerationTo("internal.service.dmz")
+				.applyingRoutingStage(routingstage)
+				.build();
+
+// create single api pipeline
+ApiPipeline apiPipeline = ApiPipeline.singlePipeline().using(pipeline).build(); 				
+ 				
 ```
 
 ### Run pipeline over http server
@@ -401,6 +461,15 @@ RequestPipelineStage stage = AuthenticationStage
 ### Changing http server
 
     TODO
+
+## Modules
+
+Here are listed and linked all modules or extensions, they could be request stages, routing or anything usefull
+
+Request stages:
+
+- [Server side discovery](/modules/server-side-discovery/readme.md)
+    
 
 ## Authors
 

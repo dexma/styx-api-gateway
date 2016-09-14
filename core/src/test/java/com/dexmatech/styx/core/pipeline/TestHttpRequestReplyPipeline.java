@@ -55,6 +55,24 @@ public class TestHttpRequestReplyPipeline {
 	}
 
 	@Test
+	public void shouldApplyStaticRouteGenerationStage() throws Exception {
+
+		// given
+		HttpRequest httpRequest = HttpRequest.get("/");
+		HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
+				.pipeline()
+				.applyingStaticRouteGenerationTo("internal.host")
+				.applyingRoutingStage(SIMPLE_ROUTING_STAGE)
+				.build();
+		// when
+		HttpResponse httpResponse = pipeline.applyHttpReplyProtocol(httpRequest).get();
+
+		// then
+		assertThat(httpResponse, is(ok()));
+
+	}
+
+	@Test
 	public void shouldApplySimpleAllStages() throws Exception {
 
 		// given

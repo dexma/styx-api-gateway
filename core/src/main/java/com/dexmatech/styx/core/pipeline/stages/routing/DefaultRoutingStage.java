@@ -49,7 +49,7 @@ public class DefaultRoutingStage {
 		private Optional<BiFunction<HttpRequest, HttpResponse, HttpResponse>> transformationAfterRouting = Optional.empty();
 		private String extractingRouteFrom = "extract route from custom function";
 
-		public Builder usingDefaultClientAndConfig(AsyncHttpClientConfig config) {
+		public Builder usingDefaultClientwithConfig(AsyncHttpClientConfig config) {
 			this.config = Optional.of(config);
 			return this;
 		}

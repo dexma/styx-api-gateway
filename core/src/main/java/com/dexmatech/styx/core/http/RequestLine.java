@@ -1,5 +1,6 @@
 package com.dexmatech.styx.core.http;
 
+import com.dexmatech.styx.core.http.utils.Uris;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,8 +21,8 @@ public class RequestLine {
 	private final String httpVersion;
 
 	//TODO: Mthoid enum, URI,HTTP version method
-	public static RequestLine from(String method, URI requestUri, String httpVersion) {
-		return new RequestLine(method, requestUri, httpVersion);
+	public static RequestLine from(String method, String requestUri, String httpVersion) {
+		return new RequestLine(method, Uris.create(requestUri), httpVersion);
 	}
 
 	public static RequestLine getMethod(URI requestUri) {

@@ -37,7 +37,7 @@ public class TestApiGatewayIT {
 
 		ApiGateway apiGateway = ApiGateway
 				.runningOverGrizzly()
-				.withDefaultServerRunningOnPort(8081)
+				.withDefaultServerRunningOnPort(8083)
 				.withExecutorService(Executors.newFixedThreadPool(4))
 				.withPipeline(pipeline)
 				.build();
@@ -45,7 +45,7 @@ public class TestApiGatewayIT {
 		// when
 		internalEndpoint.runAndKill(() -> {
 			apiGateway.start();
-			Response response = CLIENT.prepareGet("http://localhost:8081/path")
+			Response response = CLIENT.prepareGet("http://localhost:8083/")
 					.addHeader(DefaultRoutingStage.DEFAULT_HEADER_USED_TO_ROUTE,"http://localhost:"+internalEndpoint.getRunningPort())
 					.execute()
 					.get();

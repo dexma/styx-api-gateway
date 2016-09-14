@@ -6,10 +6,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.grizzly.http.server.HttpHandler;
-import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.grizzly.http.server.Request;
-import org.glassfish.grizzly.http.server.Response;
+import org.glassfish.grizzly.PortRange;
+import org.glassfish.grizzly.http.server.*;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.grizzly.threadpool.GrizzlyExecutorService;
 import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
@@ -77,7 +75,12 @@ public class ApiGateway {
 			Objects.requireNonNull(pipeline, "Api pipeline can not be empty");
 			log.info("[API Gateway on Grizzly] was successfully created");
 			return new ApiGateway(
-					httpServer.orElse(HttpServer.createSimpleServer(".", port)),
+					httpServer.orElseGet( () -> {
+						HttpServer httpServer = new HttpServer();
+						NetworkListener listener = new NetworkListener("grizzly", "0.0.0.0", new PortRange(port));
+						httpServer.addListener(listener);
+						return httpServer;
+					}),
 					complexAppExecutorService.orElseGet(DEFAULT_EXECUTOR_SERVICE_SUPPLIER),
 					pipeline
 
@@ -94,17 +97,18 @@ public class ApiGateway {
 	}
 
 	private ApiGateway run(boolean keepRunning) {
-		httpServer.getServerConfiguration().addHttpHandler(new HttpHandler() {
+		HttpHandler httpHandler = new HttpHandler() {
 
 			@Override
 			public void service(final Request request, final Response response) throws Exception {
 
 				response.suspend(); // Instruct Grizzly to not flush response, once we exit the service(...) method
-				log.debug("[Grizzly adapter] Handling request and dispatching to pipeline '{}'",request.getRequest());
+				log.debug("[Grizzly adapter] Handling request and dispatching to pipeline '{}'", request.getRequest());
 				executorService.execute(() -> {
 					try {
 						//						log.info(request.toString());
-						CompletableFuture<HttpResponse> applyHttpReplyProtocol = pipeline.reply(RequestResponseMappers.asPipelineRequest(request));
+						CompletableFuture<HttpResponse> applyHttpReplyProtocol = pipeline
+								.reply(RequestResponseMappers.asPipelineRequest(request));
 						applyHttpReplyProtocol
 								.thenAccept(httpResponse -> {
 									try {
@@ -120,7 +124,9 @@ public class ApiGateway {
 
 				});
 			}
-		}, "/*");
+		};
+		httpServer.getServerConfiguration().addHttpHandler( httpHandler, HttpHandlerRegistration.ROOT);
+		httpServer.getServerConfiguration().addHttpHandler( httpHandler, HttpHandlerRegistration.fromString("/*") );
 		try {
 			httpServer.start();
 			if(keepRunning) {

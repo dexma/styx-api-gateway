@@ -1,5 +1,6 @@
 package com.dexmatech.styx.core.http;
 
+import com.dexmatech.styx.core.http.utils.Uris;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +39,12 @@ public class HttpRequest extends HttpMessage {
 		return new HttpRequest(requestLine, headers, Optional.empty());
 	}
 
-	public static HttpRequest get(String requestUri, Headers headers) throws URISyntaxException {
-		return new HttpRequest(RequestLine.getMethod(new URI(requestUri)), headers, Optional.empty());
+	public static HttpRequest get(String requestUri, Headers headers)  {
+		return new HttpRequest(RequestLine.getMethod(Uris.create(requestUri)), headers, Optional.empty());
 	}
 
-	public static HttpRequest get(String requestUri) throws URISyntaxException {
-		return new HttpRequest(RequestLine.getMethod(new URI(requestUri)), Headers.empty(), Optional.empty());
+	public static HttpRequest get(String requestUri)  {
+		return new HttpRequest(RequestLine.getMethod(Uris.create(requestUri)), Headers.empty(), Optional.empty());
 	}
 
 	public HttpRequest addHeader(String key, String value) {

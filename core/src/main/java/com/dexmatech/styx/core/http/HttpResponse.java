@@ -18,7 +18,9 @@ import java.util.function.Function;
 public class HttpResponse extends HttpMessage {
 	public static final HttpResponse OK = new HttpResponse(StatusLine.ok(), Headers.empty(), Optional.empty());
 	public static final HttpResponse INTERNAL_SERVER_ERROR = new HttpResponse(StatusLine.INTERNAL_SERVER_ERROR, Headers.empty(), Optional.empty());
+	public static final HttpResponse NOT_FOUND = new HttpResponse(StatusLine.NOT_FOUND, Headers.empty(), Optional.empty());
 	public static final HttpResponse FORBIDDEN = new HttpResponse(StatusLine.FORBIDDEN, Headers.empty(), Optional.empty());
+	public static final HttpResponse UNAUTHORIZED = new HttpResponse(StatusLine.UNAUTHORIZED, Headers.empty(), Optional.empty());
 	private final StatusLine statusLine;
 
 	private HttpResponse(StatusLine statusLine, Headers headers, Optional<InputStream> messageBody) {
@@ -39,7 +41,14 @@ public class HttpResponse extends HttpMessage {
 	}
 
 	public static HttpResponse forbidden() {
-		return INTERNAL_SERVER_ERROR;
+		return FORBIDDEN;
+	}
+	public static HttpResponse unauthorized() {
+		return FORBIDDEN;
+	}
+
+	public static HttpResponse notFound() {
+		return NOT_FOUND;
 	}
 
 	public static HttpResponse from(StatusLine statusLine, Headers headers) {
