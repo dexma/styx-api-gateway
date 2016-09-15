@@ -1,6 +1,6 @@
 # Authentication
 
-This is request stage applies authentication process to your incoming requests:
+This is request stage that applies authentication process to your incoming requests:
 
 - If authentication success it will return a principal object
     - Adds security permission custom header to the request

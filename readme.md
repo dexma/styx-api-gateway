@@ -28,6 +28,8 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
     - [Monitoring](#monitoring)
     - [Changing http server](#changing-http-server)
 - [Modules](#modules)
+    - [Authentication](/modules/authentication/readme.md)
+    - [Server side discovery](/modules/server-side-discovery/readme.md)
 - [Authors](#authors)
 - [Contributing](#contributing)
 

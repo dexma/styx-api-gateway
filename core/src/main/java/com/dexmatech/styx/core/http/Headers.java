@@ -77,8 +77,8 @@ public class Headers {
 		return map;
 	}
 
-	public void ifNotEmpty(Consumer<Headers> consumer) {
-		consumer.accept(this);
-	}
+//	public void ifNotEmpty(Consumer<Headers> consumer) {
+//		consumer.accept(this);
+//	}
 
 }

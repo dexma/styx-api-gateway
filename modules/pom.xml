@@ -15,6 +15,7 @@
         <module>environment</module>
         <module>server-side-discovery</module>
         <module>authentication</module>
+        <module>rate-limit</module>
     </modules>
 
 
