@@ -69,7 +69,7 @@ public class HttpRequestReplyPipeline {
 		//			return this;
 		//		}
 
-		public Builder applyingStaticRouteGenerationTo(String host) {
+		public Builder applyingStaticHostOnRouteGeneration(String host) {
 			this.applyingPreRoutingStage("static-routing", StaticHostOnRoutingHeaderStage.staticRoutingTo(host));
 			return this;
 		}

@@ -54,7 +54,7 @@ public class TestApiPipelineIT {
 				HttpRequestReplyPipeline
 						.pipeline()
 						.applyingPreRoutingStage("change-port-for-test-purposes", CHANGE_URI_PORT)
-						.applyingStaticRouteGenerationTo("localhost")
+						.applyingStaticHostOnRouteGeneration("localhost")
 						.applyingDefaultRoutingStage().build()
 		).build();
 

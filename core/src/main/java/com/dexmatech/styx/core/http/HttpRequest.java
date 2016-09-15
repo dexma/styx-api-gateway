@@ -2,13 +2,9 @@ package com.dexmatech.styx.core.http;
 
 import com.dexmatech.styx.core.http.utils.Uris;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -39,16 +35,21 @@ public class HttpRequest extends HttpMessage {
 		return new HttpRequest(requestLine, headers, Optional.empty());
 	}
 
-	public static HttpRequest get(String requestUri, Headers headers)  {
+	public static HttpRequest get(String requestUri, Headers headers) {
 		return new HttpRequest(RequestLine.getMethod(Uris.create(requestUri)), headers, Optional.empty());
 	}
 
-	public static HttpRequest get(String requestUri)  {
+	public static HttpRequest get(String requestUri) {
 		return new HttpRequest(RequestLine.getMethod(Uris.create(requestUri)), Headers.empty(), Optional.empty());
 	}
 
 	public HttpRequest addHeader(String key, String value) {
 		return from(this.requestLine, getHeaders().put(key, value), getMessageBody());
+	}
+
+	public HttpRequest addHeaders(Headers headers) {
+
+		return from(this.requestLine, getHeaders().merge(headers), getMessageBody());
 	}
 
 	public HttpRequest computeHeader(String key, BiFunction<String, String, String> ifKeyPresent, Function<String, String> ifKeyAbsent) {
@@ -65,15 +66,14 @@ public class HttpRequest extends HttpMessage {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 
-		 if(log.isDebugEnabled()) {
-			 boolean thereIsBody = isBodyPresent();
+		if (log.isDebugEnabled()) {
+			boolean thereIsBody = isBodyPresent();
 			return String.format("HttpRequest(%s,%s, payload?%s)", this.getRequestLine(), this.getHeaders(), thereIsBody);
 		} else {
-			 return String.format("HttpRequest(%s,%s)", this.getRequestLine(), this.getHeaders());
-		 }
+			return String.format("HttpRequest(%s,%s)", this.getRequestLine(), this.getHeaders());
+		}
 	}
-
 
 }

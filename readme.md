@@ -20,7 +20,7 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
     - [Create single pipeline](#create-single-pipeline)
     - [Create multi pipeline](#create-multi-pipeline)
     - [Run pipeline over http server](#run-pipeline-over-http-server)
-    - [Default routing stage](#default-routing-stage)
+    - [Default routing stage](#Default-routing-stage)
     - [Implementing stage](#implementing-stage)
     - [Implementing complex stage](#implementing-complex-stage)
     - [Handling with errors](#handling-with-errors)
@@ -197,7 +197,7 @@ All incoming request will be handled by this:
 // create http request-reply pipeline
 HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
 				.pipeline()
-				.applyingStaticRouteGenerationTo("internal.service.dmz")
+				.applyingStaticHostOnRouteGeneration("internal.service.dmz")
 				.applyingDefaultRoutingStage()
 				.build();
 
@@ -222,7 +222,7 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 						HttpRequestReplyPipeline
 								.pipeline()
 								.applyingPreRoutingStage("authentication", myAuthentication())
-								.applyingStaticRouteGenerationTo("internal.service.dmz")
+								.applyingStaticHostOnRouteGeneration("internal.service.dmz")
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -232,7 +232,7 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 						HttpRequestReplyPipeline
 								.pipeline()
 								.applyingPreRoutingStage("rate-limit", myRateLimit())
-								.applyingStaticRouteGenerationTo("internal.service.dmz")
+								.applyingStaticHostOnRouteGeneration("internal.service.dmz")
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -243,7 +243,7 @@ Sometimes you will need more than one pipeline to handle you request, for exampl
 								.pipeline()
 								.applyingPreRoutingStage("authentication", myAuthentication())
 								.applyingPreRoutingStage("rate-limit", myRateLimit())
-								.applyingStaticRouteGenerationTo("internal.service.dmz")
+								.applyingStaticHostOnRouteGeneration("internal.service.dmz")
 								.applyingDefaultRoutingStage()
 								.build()
 				).build();
@@ -272,7 +272,7 @@ Then, you can do:
 ```java
  HttpRequestReplyPipeline
    				.pipeline()
-   				.applyingStaticRouteGenerationTo("internal.service.dmz") 
+   				.applyingStaticHostOnRouteGeneration("internal.service.dmz") 
    		...
 ```
 Then if a request enter with a requested uri as 
@@ -307,7 +307,7 @@ Also, you can override some parameters of default routing implementation:
 // create http request-reply pipeline
 HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
 				.pipeline()
-				.applyingStaticRouteGenerationTo("internal.service.dmz")
+				.applyingStaticHostOnRouteGeneration("internal.service.dmz")
 				.applyingRoutingStage(routingstage)
 				.build();
 
@@ -368,10 +368,6 @@ import com.dexmatech.styx.core.pipeline.stages.StageResult;
 
 import java.util.Objects;
 import java.util.Optional;
-
-/**
- * Created by aortiz on 9/08/16.
- */
 
 public class AuthenticationStage {
 
@@ -439,7 +435,7 @@ AuthenticationService authenticationService = new MyAuthenticationImpl(config, .
 
 RequestPipelineStage stage = AuthenticationStage
 				.usingDefaults()
-				.authenticatingWith()
+				.authenticatingWith(authenticationService)
 				.usingHeaderToken("X-my-security-header")
 				.build();
 
@@ -469,6 +465,7 @@ Here are listed and linked all modules or extensions, they could be request stag
 
 Request stages:
 
+- [Authentication](/modules/authentication/readme.md)
 - [Server side discovery](/modules/server-side-discovery/readme.md)
     
 

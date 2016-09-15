@@ -14,7 +14,6 @@
     <modules>
         <module>core</module>
         <module>modules</module>
-        <module>modules/authentication</module>
     </modules>
 
     <distributionManagement>

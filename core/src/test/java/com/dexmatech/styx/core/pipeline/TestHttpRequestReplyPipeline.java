@@ -61,7 +61,7 @@ public class TestHttpRequestReplyPipeline {
 		HttpRequest httpRequest = HttpRequest.get("/");
 		HttpRequestReplyPipeline pipeline = HttpRequestReplyPipeline
 				.pipeline()
-				.applyingStaticRouteGenerationTo("internal.host")
+				.applyingStaticHostOnRouteGeneration("internal.host")
 				.applyingRoutingStage(SIMPLE_ROUTING_STAGE)
 				.build();
 		// when

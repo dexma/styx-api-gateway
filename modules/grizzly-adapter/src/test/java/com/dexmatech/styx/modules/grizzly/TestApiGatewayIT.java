@@ -6,6 +6,7 @@ import com.dexmatech.styx.core.http.HttpRequest;
 import com.dexmatech.styx.core.http.HttpResponse;
 import com.dexmatech.styx.core.pipeline.HttpRequestReplyPipeline;
 import com.dexmatech.styx.core.pipeline.stages.routing.DefaultRoutingStage;
+import com.dexmatech.styx.utils.SocketUtils;
 import com.dexmatech.styx.utils.jetty.LocalTestServer;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
@@ -35,9 +36,10 @@ public class TestApiGatewayIT {
 				HttpRequestReplyPipeline.pipeline().applyingDefaultRoutingStage().build()
 		).build();
 
+		int randomPort = SocketUtils.findRandomPort();
 		ApiGateway apiGateway = ApiGateway
 				.runningOverGrizzly()
-				.withDefaultServerRunningOnPort(8083)
+				.withDefaultServerRunningOnPort(randomPort)
 				.withExecutorService(Executors.newFixedThreadPool(4))
 				.withPipeline(pipeline)
 				.build();
@@ -45,7 +47,7 @@ public class TestApiGatewayIT {
 		// when
 		internalEndpoint.runAndKill(() -> {
 			apiGateway.start();
-			Response response = CLIENT.prepareGet("http://localhost:8083/")
+			Response response = CLIENT.prepareGet("http://localhost:"+randomPort+"/")
 					.addHeader(DefaultRoutingStage.DEFAULT_HEADER_USED_TO_ROUTE,"http://localhost:"+internalEndpoint.getRunningPort())
 					.execute()
 					.get();
@@ -65,10 +67,10 @@ public class TestApiGatewayIT {
 		ApiPipeline pipeline = ApiPipeline.singlePipeline().using(
 				HttpRequestReplyPipeline.pipeline().applyingDefaultRoutingStage().build()
 		).build();
-
+		int randomPort = SocketUtils.findRandomPort();
 		ApiGateway apiGateway = ApiGateway
 				.runningOverGrizzly()
-				.withDefaultServerRunningOnPort(8081)
+				.withDefaultServerRunningOnPort(randomPort)
 				.withExecutorService(Executors.newFixedThreadPool(4))
 				.withPipeline(pipeline)
 				.build();
@@ -76,7 +78,7 @@ public class TestApiGatewayIT {
 		// when
 		internalEndpoint.runAndKill(() -> {
 			apiGateway.start();
-			Response response = CLIENT.prepareGet("http://localhost:8081/path")
+			Response response = CLIENT.prepareGet("http://localhost:"+randomPort+"/path")
 					.execute()
 					.get();
 			// then

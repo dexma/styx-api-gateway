@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import java.util.Collections;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -33,6 +34,13 @@ public class Headers {
 		HashMap<String, String> headers = new HashMap<>();
 		headers.putAll(map);
 		return new Headers(Collections.unmodifiableMap(headers));
+	}
+
+	public Headers merge(Headers headers) {
+		Map<String,String> map = new HashMap<>();
+		map.putAll(this.map);
+		map.putAll(headers.toMap());
+		return Headers.from(map);
 	}
 
 	public Headers compute(String key, BiFunction<String,String,String> ifKeyPresent, Function<String,String> ifKeyAbsent) {
@@ -67,6 +75,10 @@ public class Headers {
 
 	public Map<String,String> toMap() {
 		return map;
+	}
+
+	public void ifNotEmpty(Consumer<Headers> consumer) {
+		consumer.accept(this);
 	}
 
 }

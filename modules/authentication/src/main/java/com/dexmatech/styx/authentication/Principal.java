@@ -5,16 +5,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-/**
- * Created by gszeliga on 22/12/14.
- */
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+/**
+ *  Representation of entity an that requests access
+ */
 public class Principal {
-	//    private final List<Scope> scopes;
-	//    private final Meta meta;
-
+	private final List<Permission> permissions;
+	private final MetaInfo metaInfo;
 }

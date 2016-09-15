@@ -44,7 +44,7 @@ public class HttpResponse extends HttpMessage {
 		return FORBIDDEN;
 	}
 	public static HttpResponse unauthorized() {
-		return FORBIDDEN;
+		return UNAUTHORIZED;
 	}
 
 	public static HttpResponse notFound() {
