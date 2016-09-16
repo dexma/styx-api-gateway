@@ -135,5 +135,5 @@ Here you have some glue code to adapt your non-async code:
 ```
 
 This is only an example, for a custom usages please we recommend you to create a DSL as explained in 
-[Implementing complex stage](../../readme-md)
+[Implementing complex stage](https://github.com/dexma/styx-api-gateway#implementing-complex-stage)
 
