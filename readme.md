@@ -445,6 +445,7 @@ RequestPipelineStage stage = AuthenticationStage
 ```
 
 *Note: this is only a sample in order to view how to code a simple DSL to encapsulate an stage creation.*
+*Note 2: this example is totally blocking, please use async code*
 
 ### Handling with errors
 
