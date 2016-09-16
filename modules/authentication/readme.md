@@ -27,11 +27,11 @@ For the simplest usage you only has to provide:
 - Authenticator dependency: This is your work, provide us an implementation from who really authenticates
 
 ```java
-Authenticator authenticator 
+AuthenticationProvider authenticationProvider 
 
 RequestPipelineStage stage = AuthenticationStage
                     .authenticationByToken("X-token")
-                    .withAuthenticator(authenticator)
+                    .withAuthenticationProvider(authenticationProvider)
                     .build();
 
 ```
@@ -41,7 +41,7 @@ If a request enter to a pipeline with:
     request -> GET http://www.mydomain.com:8080/api/v1/users
     headers -> X-token : Xxcew23ASDzxwsadsadsad
     
-And authenticator returns a Principal object with:
+And stage returns a Principal object with:
  
         permissions -> [(user,R),(user,W),(items,R)]
         meta info -> [(account, 101)]
@@ -52,12 +52,12 @@ Then the stage will return an success request to the pipeline with custom header
         X-security-account: 101
 
 
-## Authenticator
+## Authentication provider
 
-In order to authenticate you must to provide an implementation of Authenticator:
+In order to authenticate you must to provide an implementation of AuthenticationProvider:
 ```java
 @FunctionalInterface
-public interface Authenticator {
+public interface AuthenticationProvider {
 	CompletableFuture<Optional<Principal>> authenticate(String token);
 }
 ```
@@ -67,7 +67,7 @@ Here you have some glue code to adapt your non-async code:
 ```java
     SecurityService securityService = // your real non async security service 
 
-	Authenticator myAuthenticator = token -> {
+	AuthenticationProvider myAuthenticator = token -> {
     
     		return CompletableFuture.supplyAsync(() -> {
     
@@ -86,6 +86,9 @@ Here you have some glue code to adapt your non-async code:
     		};
     	};
 ```
+
+This is only an example, for a custom usages please we recommend you to create a DSL as explained in 
+[Implementing complex stage](../../readme-md)
 
 #### Principal
 
@@ -122,7 +125,7 @@ The default behaviour could be override:
 ```java
     RequestPipelineStage stage = AuthenticationStage
     				.authenticationByToken("X-token")
-    				.withAuthenticator(AUTHENTICATOR)
+    				.withAuthenticationProvider(AUTHENTICATION_PROVIDER)
     				// if you want to change the default fail response 
     				// you must to implement a function request -> response
     				.whenAuthenticationFailsRespondWith(httpRequest -> null)

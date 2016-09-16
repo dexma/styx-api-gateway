@@ -29,6 +29,7 @@ Styx is an async and non-blocking API Gateway developed by dexmatech that handle
     - [Changing http server](#changing-http-server)
 - [Modules](#modules)
     - [Authentication](/modules/authentication/readme.md)
+    - [Rate limit](/modules/rate-limit/readme.md)
     - [Server side discovery](/modules/server-side-discovery/readme.md)
 - [Authors](#authors)
 - [Contributing](#contributing)
@@ -451,7 +452,7 @@ RequestPipelineStage stage = AuthenticationStage
 
 ### Resiliency
 
-    TODO
+    Doing : Circuit breaker module
 
 ### Monitoring
 
@@ -469,6 +470,7 @@ Request stages:
 
 - [Authentication](/modules/authentication/readme.md)
 - [Server side discovery](/modules/server-side-discovery/readme.md)
+- [Rate limit](/modules/rate-limit/readme.md)
     
 
 ## Authors
@@ -481,6 +483,8 @@ Request stages:
 ## Contributing
 
 Of course, we encourage the community to contribute with us and add specific modules and integrations with 3rd party systems!
+
+Take as an example any of our modules of the previous section.
 
 Bug reporting and Pull Requests are welcome.
 

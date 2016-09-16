@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -21,6 +22,8 @@ public class HttpResponse extends HttpMessage {
 	public static final HttpResponse NOT_FOUND = new HttpResponse(StatusLine.NOT_FOUND, Headers.empty(), Optional.empty());
 	public static final HttpResponse FORBIDDEN = new HttpResponse(StatusLine.FORBIDDEN, Headers.empty(), Optional.empty());
 	public static final HttpResponse UNAUTHORIZED = new HttpResponse(StatusLine.UNAUTHORIZED, Headers.empty(), Optional.empty());
+	public static final HttpResponse TOO_MANY_REQUESTS = new HttpResponse(StatusLine.TOO_MANY_REQUESTS, Headers.empty(), Optional.empty());
+
 	private final StatusLine statusLine;
 
 	private HttpResponse(StatusLine statusLine, Headers headers, Optional<InputStream> messageBody) {
@@ -40,11 +43,19 @@ public class HttpResponse extends HttpMessage {
 		return INTERNAL_SERVER_ERROR;
 	}
 
+	public static HttpResponse toManyRequests() {
+		return TOO_MANY_REQUESTS;
+	}
+
 	public static HttpResponse forbidden() {
 		return FORBIDDEN;
 	}
 	public static HttpResponse unauthorized() {
 		return UNAUTHORIZED;
+	}
+
+	public static HttpResponse unauthorized(byte[] body) {
+		return new HttpResponse(StatusLine.UNAUTHORIZED, Headers.empty(), Optional.of(new ByteArrayInputStream(body)));
 	}
 
 	public static HttpResponse notFound() {
@@ -58,6 +69,11 @@ public class HttpResponse extends HttpMessage {
 	public HttpResponse addHeader(String key, String value) {
 		return from(this.statusLine, getHeaders().put(key, value), getMessageBody().orElse(null));
 	}
+
+	public HttpResponse addHeaders(Headers headers) {
+		return from(this.statusLine, getHeaders().merge(headers), getMessageBody().orElse(null));
+	}
+
 
 	public HttpResponse computeHeader(String key, BiFunction<String, String, String> ifKeyPresent, Function<String, String> ifKeyAbsent) {
 		return from(this.statusLine, getHeaders().compute(key, ifKeyPresent, ifKeyAbsent), getMessageBody().orElse(null));

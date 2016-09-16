@@ -58,6 +58,8 @@ public class TestApiGatewayIT {
 
 	}
 
+	
+
 
 	@Test
 	public void shouldHandleAndReturnAnInternalServerError() throws Exception {

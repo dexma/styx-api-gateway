@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
  * Created by aortiz on 14/09/16.
  */
 @FunctionalInterface
-public interface Authenticator {
+public interface AuthenticationProvider {
 	CompletableFuture<Optional<Principal>> authenticate(String token);
 
 }

@@ -15,13 +15,13 @@ import static org.hamcrest.core.IsNull.notNullValue;
  */
 public class TestAuthenticationStageBuilder {
 
-	public static final Authenticator AUTHENTICATOR = token ->
+	public static final AuthenticationProvider AUTHENTICATION_PROVIDER = token ->
 			CompletableFuture.completedFuture(Optional.of(new Principal(Collections.emptyList(), MetaInfo.empty())));
 
 	@Test
 	public void shouldCreateAnStageWithDefaults() {
 		// when
-		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticator(AUTHENTICATOR).build();
+		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticationProvider(AUTHENTICATION_PROVIDER).build();
 		// then
 		assertThat(stage, notNullValue());
 	}
@@ -37,7 +37,7 @@ public class TestAuthenticationStageBuilder {
 		// when
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
-				.withAuthenticator(AUTHENTICATOR)
+				.withAuthenticationProvider(AUTHENTICATION_PROVIDER)
 				.whenAuthenticationFailsRespondWith(httpRequest -> null)
 				.generatingMetaInfoHeadersWith(metaInfo -> null)
 				.generatingPermissionHeadersWith(permissions -> null)

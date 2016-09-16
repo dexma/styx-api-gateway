@@ -28,19 +28,19 @@ import static org.junit.Assert.assertThat;
  */
 public class TestAuthenticationStage {
 
-	public static final Authenticator SUCCESS_AUTHENTICATOR = token ->
+	public static final AuthenticationProvider SUCCESS_AUTHENTICATION_PROVIDER = token ->
 			completedFuture(Optional.of(new Principal(emptyList(), MetaInfo.empty())));
 
-	public static final Function<Principal, Authenticator> SUCCESS_FROM = principal -> token ->
+	public static final Function<Principal, AuthenticationProvider> SUCCESS_FROM = principal -> token ->
 			completedFuture(Optional.of(principal));
 
-	public static final Authenticator FAIL_AUTHENTICATOR = token -> completedFuture(Optional.empty());
+	public static final AuthenticationProvider FAIL_AUTHENTICATION_PROVIDER = token -> completedFuture(Optional.empty());
 
 	@Test
 	public void shouldCompleteStageAuthenticating() throws Exception {
 		// given
 		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
-		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticator(SUCCESS_AUTHENTICATOR).build();
+		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticationProvider(SUCCESS_AUTHENTICATION_PROVIDER).build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
@@ -51,7 +51,7 @@ public class TestAuthenticationStage {
 	public void shouldAbortStageWhenTokenIsNotPresentAuthenticationFails() throws Exception {
 		// given
 		HttpRequest httpRequest = HttpRequest.get("/");
-		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticator(FAIL_AUTHENTICATOR).build();
+		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticationProvider(FAIL_AUTHENTICATION_PROVIDER).build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
@@ -66,7 +66,7 @@ public class TestAuthenticationStage {
 	public void shouldAbortStageWhenAuthenticationFails() throws Exception {
 		// given
 		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
-		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticator(FAIL_AUTHENTICATOR).build();
+		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticationProvider(FAIL_AUTHENTICATION_PROVIDER).build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
@@ -82,7 +82,7 @@ public class TestAuthenticationStage {
 		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
-				.withAuthenticator(FAIL_AUTHENTICATOR)
+				.withAuthenticationProvider(FAIL_AUTHENTICATION_PROVIDER)
 				.whenAuthenticationFailsRespondWith(r-> HttpResponse.from(StatusLine.UNAUTHORIZED,Headers.empty(),new ByteArrayInputStream("AUTH FAILS".getBytes
 						())))
 				.build();
@@ -103,7 +103,7 @@ public class TestAuthenticationStage {
 		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
-				.withAuthenticator(SUCCESS_FROM.apply(new Principal(
+				.withAuthenticationProvider(SUCCESS_FROM.apply(new Principal(
 								Arrays.asList(Permission.of("users", "R"), Permission.of("users", "W")), MetaInfo.initWith("account", "3")
 						))
 				)
@@ -127,7 +127,7 @@ public class TestAuthenticationStage {
 		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
-				.withAuthenticator(SUCCESS_AUTHENTICATOR)
+				.withAuthenticationProvider(SUCCESS_AUTHENTICATION_PROVIDER)
 				.generatingPermissionHeadersWith(permissions -> Headers.from("X-custom-permission",""))
 				.build();
 		// when
@@ -146,7 +146,7 @@ public class TestAuthenticationStage {
 		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
-				.withAuthenticator(SUCCESS_AUTHENTICATOR)
+				.withAuthenticationProvider(SUCCESS_AUTHENTICATION_PROVIDER)
 				.generatingMetaInfoHeadersWith(metaInfo-> Headers.from("X-meta",""))
 				.build();
 		// when

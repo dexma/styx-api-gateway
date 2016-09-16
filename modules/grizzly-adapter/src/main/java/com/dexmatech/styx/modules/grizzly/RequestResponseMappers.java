@@ -9,10 +9,10 @@ import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by aortiz on 9/08/16.
@@ -21,7 +21,8 @@ public class RequestResponseMappers {
 
 	public static HttpRequest asPipelineRequest(Request grizzlyRequest) throws URISyntaxException {
 		RequestLine requestLine = RequestLine.from(
-				grizzlyRequest.getMethod().getMethodString(), grizzlyRequest.getRequestURI(), grizzlyRequest.getProtocol().getProtocolString()
+				grizzlyRequest.getMethod().getMethodString(), grizzlyRequest.getRequestURI(),
+				grizzlyRequest.getProtocol().getProtocolString()
 		);
 		return HttpRequest.from(
 				requestLine, extractAndConvertHeaders(grizzlyRequest), grizzlyRequest.getInputStream()
@@ -49,6 +50,8 @@ public class RequestResponseMappers {
 		for (String key : grizzlyRequest.getHeaderNames()) {
 			map.put(key, grizzlyRequest.getHeader(key));
 		}
+		Optional.ofNullable(grizzlyRequest.getRequest().getRemoteAddress())
+				.ifPresent(remoteAddress -> map.put(Headers.CUSTOM_HEADER_KEY_FOR_CLIENT_IP, remoteAddress));
 		return Headers.from(map);
 	}
 

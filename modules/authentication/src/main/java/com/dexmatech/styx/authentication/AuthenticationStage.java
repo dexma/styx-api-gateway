@@ -38,7 +38,7 @@ public class AuthenticationStage {
 
 	public static class Builder {
 
-		private Authenticator authenticator;
+		private AuthenticationProvider authenticationProvider;
 
 		private Optional<String> permissionHeaderKey = Optional.empty();
 
@@ -54,8 +54,8 @@ public class AuthenticationStage {
 			this.tokenExtractor = tokenExtractor;
 		}
 
-		public Builder withAuthenticator(Authenticator authenticator) {
-			this.authenticator = authenticator;
+		public Builder withAuthenticationProvider(AuthenticationProvider authenticationProvider) {
+			this.authenticationProvider = authenticationProvider;
 			return this;
 		}
 
@@ -75,7 +75,7 @@ public class AuthenticationStage {
 		}
 
 		public RequestPipelineStage build() {
-			Objects.requireNonNull(authenticator, "Please provide an authenticator");
+			Objects.requireNonNull(authenticationProvider, "Please provide an authenticator");
 			Function<List<Permission>, Headers> permissionHeadersGenerator =
 					permissionsToHeaders.orElseGet(
 							() -> PARSE_PERMISSIONS_TO_ONE_HEADER.apply(permissionHeaderKey.orElse
@@ -85,7 +85,7 @@ public class AuthenticationStage {
 
 			return httpRequest -> {
 				Optional<String> token = tokenExtractor.apply(httpRequest);
-				return token.map(t->authenticator.authenticate(t)
+				return token.map(t-> authenticationProvider.authenticate(t)
 						.thenApply(principal ->
 								principal.map(p -> {
 									Headers permissionHeaders = permissionHeadersGenerator.apply(p.getPermissions());

@@ -20,6 +20,9 @@ import java.util.function.Function;
 @ToString
 public class Headers {
 
+
+	public static final String CUSTOM_HEADER_KEY_FOR_CLIENT_IP = "X-remote-address";
+
 	private final Map<String,String> map;
 
 
@@ -77,7 +80,11 @@ public class Headers {
 		return map;
 	}
 
-//	public void ifNotEmpty(Consumer<Headers> consumer) {
+	public int size() {
+		return this.map.size();
+	}
+
+	//	public void ifNotEmpty(Consumer<Headers> consumer) {
 //		consumer.accept(this);
 //	}
 

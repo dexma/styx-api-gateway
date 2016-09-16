@@ -1,3 +1,4 @@
+
 package com.dexmatech.styx.core.http;
 
 import lombok.AccessLevel;
@@ -18,6 +19,8 @@ public class StatusLine {
 	public static final StatusLine FORBIDDEN = new StatusLine(HttpMessage.VERSION_HTTP_1_1, 401, "Forbidden");
 	public static final StatusLine UNAUTHORIZED = new StatusLine(HttpMessage.VERSION_HTTP_1_1, 403, "Unauthorized");
 	public static final StatusLine NOT_FOUND = new StatusLine(HttpMessage.VERSION_HTTP_1_1, 404, "Not found");
+	public static final StatusLine TOO_MANY_REQUESTS = new StatusLine(HttpMessage.VERSION_HTTP_1_1, 429, "To Many Requests");
+
 
 	private final String httpVersion;
 	private final int statusCode;
