@@ -1,4 +1,4 @@
-package com.dexmatech.styx.utils.jetty;
+package com.dexmatech.styx.testing.jetty;
 
 /**
  * Created by aortiz on 8/09/16.
@@ -10,7 +10,7 @@ import javax.servlet.ServletException;
 
 import java.io.IOException;
 
-import com.dexmatech.styx.utils.SocketUtils;
+import com.dexmatech.styx.testing.SocketUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -19,6 +19,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.server.handler.ContextHandler;
+
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Map;
@@ -43,6 +45,7 @@ public class LocalTestServer {
 		private int responseStatus = 200;
 		private byte[] responseBody = new byte[0];
 		private Map<String,String> responseHeaders = new HashMap<>();
+		private Optional<String> virtualHost = Optional.empty();
 
 		public Builder onPort(int port) {
 			this.port = Optional.of(port);
@@ -56,6 +59,11 @@ public class LocalTestServer {
 
 		public Builder respondingWith(int status) {
 			this.responseStatus = status;
+			return this;
+		}
+
+		public Builder withVirtualHost(String virtualHost) {
+			this.virtualHost = Optional.of(virtualHost);
 			return this;
 		}
 
@@ -90,12 +98,15 @@ public class LocalTestServer {
 		public LocalTestServer build() {
 			Integer port = this.port.orElseGet(SocketUtils::findRandomPort);
 			Server server = new Server(port);
-			server.setHandler(new AbstractHandler() {
+			ContextHandler contextHandler = new ContextHandler("/");
+			virtualHost.ifPresent(v-> contextHandler.setVirtualHosts(new String[]{v}));
+
+			AbstractHandler handler = new AbstractHandler() {
 				@Override public void handle(String target, Request request, HttpServletRequest httpServletRequest,
 						HttpServletResponse httpServletResponse)
 						throws IOException, ServletException {
 					httpServletResponse.setStatus(responseStatus);
-					responseHeaders.entrySet().forEach(e->httpServletResponse.addHeader(e.getKey(),e.getValue()));
+					responseHeaders.entrySet().forEach(e -> httpServletResponse.addHeader(e.getKey(), e.getValue()));
 					delayInMillis.ifPresent(integer -> {
 						try {
 							Thread.sleep(integer);
@@ -106,10 +117,12 @@ public class LocalTestServer {
 					request.setHandled(true);
 					httpServletResponse.setContentType(responseContentType);
 					httpServletResponse.getOutputStream().write(responseBody);
-//					httpServletResponse.getWriter().println("<h1>Hello World</h1>");
+					//					httpServletResponse.getWriter().println("<h1>Hello World</h1>");
 
 				}
-			});
+			};
+			contextHandler.setHandler(handler);
+			server.setHandler(contextHandler);
 			return new LocalTestServer(server,port);
 		}
 

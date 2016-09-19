@@ -3,7 +3,7 @@ package com.dexmatech.styx.core.pipeline.stages.routing;
 import com.dexmatech.styx.core.http.Headers;
 import com.dexmatech.styx.core.http.HttpRequest;
 import com.dexmatech.styx.core.http.HttpResponse;
-import com.dexmatech.styx.utils.jetty.LocalTestServer;
+import com.dexmatech.styx.testing.jetty.LocalTestServer;
 import com.dexmatech.styx.core.pipeline.stages.StageResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import org.junit.Test;
 import java.net.ConnectException;
 import java.util.concurrent.TimeoutException;
 
-import static com.dexmatech.styx.utils.jetty.LocalTestServer.setUpLocalServer;
+import static com.dexmatech.styx.testing.jetty.LocalTestServer.setUpLocalServer;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 

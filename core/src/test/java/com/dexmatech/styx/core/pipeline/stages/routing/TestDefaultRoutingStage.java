@@ -5,7 +5,7 @@ import com.dexmatech.styx.core.http.HttpRequest;
 import com.dexmatech.styx.core.http.HttpResponse;
 import com.dexmatech.styx.core.pipeline.stages.AbortedStage;
 import com.dexmatech.styx.core.pipeline.stages.StageResult;
-import com.dexmatech.styx.utils.asynchttpclient.ClientResponse;
+import com.dexmatech.styx.testing.asynchttpclient.ClientResponse;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.Request;
 import org.junit.Test;

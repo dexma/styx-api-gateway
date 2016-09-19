@@ -1,13 +1,10 @@
 package com.dexmatech.styx.modules.grizzly;
 
 import com.dexmatech.styx.core.ApiPipeline;
-import com.dexmatech.styx.core.http.Headers;
-import com.dexmatech.styx.core.http.HttpRequest;
-import com.dexmatech.styx.core.http.HttpResponse;
 import com.dexmatech.styx.core.pipeline.HttpRequestReplyPipeline;
 import com.dexmatech.styx.core.pipeline.stages.routing.DefaultRoutingStage;
-import com.dexmatech.styx.utils.SocketUtils;
-import com.dexmatech.styx.utils.jetty.LocalTestServer;
+import com.dexmatech.styx.testing.SocketUtils;
+import com.dexmatech.styx.testing.jetty.LocalTestServer;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.Response;
@@ -15,7 +12,7 @@ import org.junit.Test;
 
 import java.util.concurrent.Executors;
 
-import static com.dexmatech.styx.utils.jetty.LocalTestServer.setUpLocalServer;
+import static com.dexmatech.styx.testing.jetty.LocalTestServer.setUpLocalServer;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;

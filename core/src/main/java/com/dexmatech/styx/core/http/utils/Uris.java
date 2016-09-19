@@ -17,6 +17,13 @@ public class Uris {
 		return scheme + host + port + uri.getPath() + queryParams;
 	}
 
+	public static String changeHostAndPort(URI uri, String host, int port) {
+		String portStr = Optional.ofNullable(port).map(p -> ":" + p).orElseGet(() -> "");
+		String scheme = Optional.ofNullable(uri.getScheme()).map(s -> s + "://").orElseGet(() -> "http://");
+		String queryParams = Optional.ofNullable(uri.getQuery()).map(q -> "?" + q).orElseGet(() -> "");
+		return scheme + host + portStr + uri.getPath() + queryParams;
+	}
+
 	public static URI create(String uri) {
 
 		try {

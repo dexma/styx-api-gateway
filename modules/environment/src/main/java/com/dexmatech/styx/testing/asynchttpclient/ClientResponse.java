@@ -1,4 +1,4 @@
-package com.dexmatech.styx.utils.asynchttpclient;
+package com.dexmatech.styx.testing.asynchttpclient;
 
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders;

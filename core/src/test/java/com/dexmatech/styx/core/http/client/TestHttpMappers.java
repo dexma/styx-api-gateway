@@ -3,7 +3,7 @@ package com.dexmatech.styx.core.http.client;
 import com.dexmatech.styx.core.http.Headers;
 import com.dexmatech.styx.core.http.HttpRequest;
 import com.dexmatech.styx.core.http.HttpResponse;
-import com.dexmatech.styx.utils.asynchttpclient.ClientResponse;
+import com.dexmatech.styx.testing.asynchttpclient.ClientResponse;
 import com.dexmatech.styx.core.utils.IOUTils;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders;

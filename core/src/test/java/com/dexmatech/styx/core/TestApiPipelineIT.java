@@ -2,16 +2,14 @@ package com.dexmatech.styx.core;
 
 import com.dexmatech.styx.core.http.*;
 import com.dexmatech.styx.core.pipeline.HttpRequestReplyPipeline;
-import com.dexmatech.styx.core.pipeline.stages.StageResult;
-import com.dexmatech.styx.core.pipeline.stages.request.RequestPipelineStage;
 import com.dexmatech.styx.core.pipeline.stages.routing.DefaultRoutingStage;
-import com.dexmatech.styx.utils.jetty.LocalTestServer;
+import com.dexmatech.styx.testing.jetty.LocalTestServer;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dexmatech.styx.utils.jetty.LocalTestServer.setUpLocalServer;
+import static com.dexmatech.styx.testing.jetty.LocalTestServer.setUpLocalServer;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -43,18 +41,12 @@ public class TestApiPipelineIT {
 	@Test
 	public void shouldApplyPipelineWhenStaticRouteGenerationIsUsed() throws Exception {
 		// given
-		LocalTestServer server = setUpLocalServer().build();
+		LocalTestServer server = setUpLocalServer().withVirtualHost("virtual.com").build();
 		HttpRequest request = HttpRequest.get("/");
-		RequestPipelineStage CHANGE_URI_PORT = r -> {
-			HttpRequest get = HttpRequest.from(
-					RequestLine.from("GET", "http://localhost:" + server.getRunningPort(), HttpMessage.VERSION_HTTP_1_1), r.getHeaders());
-			return StageResult.completeStageSuccessfullyWith(get);
-		};
 		ApiPipeline pipeline = ApiPipeline.singlePipeline().using(
 				HttpRequestReplyPipeline
 						.pipeline()
-						.applyingPreRoutingStage("change-port-for-test-purposes", CHANGE_URI_PORT)
-						.applyingStaticHostOnRouteGeneration("localhost")
+						.applyingStaticHostOnRouteGeneration("virtual.com")
 						.applyingDefaultRoutingStage().build()
 		).build();
 
