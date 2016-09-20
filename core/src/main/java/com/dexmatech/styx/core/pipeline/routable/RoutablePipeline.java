@@ -65,7 +65,7 @@ public abstract class RoutablePipeline {
 			Objects.requireNonNull(pipeline, "Pipeline can not be empty to construct a routable http reply pipeline");
 			if (typeRoute.equals(MATCHING_BY_HOST) || typeRoute.equals(TypeRoute.MATCHING_BY_HOST_AND_PATH_REGEX_PATTERN)) {
 				host.ifPresent(h -> {
-							if (!HostValidators.HOST_VALIDATOR.test(h)) {
+							if (!HostValidators.HOST_WITH_OPTIONAL_PORT_VALIDATOR.test(h)) {
 								throw new IllegalArgumentException(
 										"Impossible create a routable pipeline, host provided is malformed => " + h
 								);

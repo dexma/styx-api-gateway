@@ -21,14 +21,14 @@ public class HostRoutingRule {
 
 
 	public static HostRoutingRule defaultHostRule(String toHost) {
-		if (!HostValidators.HOST_VALIDATOR.test(toHost)) {
+		if (!HostValidators.HOST_WITH_OPTIONAL_PORT_VALIDATOR.test(toHost)) {
 			throw new IllegalArgumentException("Impossible create a host routing rule , host provided is malformed => " + toHost);
 		}
 		return new HostRoutingRule(REGEX_TO_MATCH_ANY_PATH, toHost);
 	}
 
 	public static HostRoutingRule from(String regexUriPath, String toHost) {
-		if (!HostValidators.HOST_VALIDATOR.test(toHost)) {
+		if (!HostValidators.HOST_WITH_OPTIONAL_PORT_VALIDATOR.test(toHost)) {
 			throw new IllegalArgumentException("Impossible create a host routing rule , host provided is malformed => " + toHost);
 		}
 		return new HostRoutingRule(Pattern.compile(regexUriPath), toHost);

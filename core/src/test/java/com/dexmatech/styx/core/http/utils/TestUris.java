@@ -28,7 +28,7 @@ public class TestUris {
 	}
 
 	@Test
-	public void shouldCreateAnUriWithouthPort() {
+	public void shouldCreateAnUriWithoutPort() {
 		// when
 		URI uri = Uris.create("http://www.mydomain.com/api?param=1");
 		// then
@@ -65,12 +65,21 @@ public class TestUris {
 	}
 
 	@Test
-	public void shouldReplaceHostWhenPortIsPresent() {
+	public void shouldReplaceHostWhenPortIsPresentInUri() {
 
 		// when
 		String uri = Uris.changeHost(Uris.create("http://www.mydomain.com:8081/api"), "internal.domain.dmz");
 		// then
 		assertThat(uri, is("http://internal.domain.dmz:8081/api"));
+	}
+
+	@Test
+	public void shouldReplaceHostAndPortWhenPortIsIncludedAsReplacement() {
+
+		// when
+		String uri = Uris.changeHost(Uris.create("http://www.mydomain.com:8081/api"), "internal.domain.dmz:9090");
+		// then
+		assertThat(uri, is("http://internal.domain.dmz:9090/api"));
 	}
 
 	@Test

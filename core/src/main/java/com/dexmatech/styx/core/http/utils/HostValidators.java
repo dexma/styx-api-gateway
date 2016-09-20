@@ -11,10 +11,10 @@ import java.util.regex.Pattern;
 public class HostValidators {
 
 	private static Pattern VALID_HOST_NAME_PATTERN = Pattern.compile(
-			"^(([a-z]|[a-z][a-z0-9-]*[a-z0-9]).)*([a-z]|[a-z][a-z0-9-]*[a-z0-9])$", Pattern.CASE_INSENSITIVE
+			"^(([a-z]|[a-z][a-z0-9-]*[a-z0-9]).)*([a-z]|[a-z][a-z0-9-]*[a-z0-9])(:[0-9]*)?$", Pattern.CASE_INSENSITIVE
 	);
 
-	public static Predicate<String> HOST_VALIDATOR = host -> {
+	public static Predicate<String> HOST_WITH_OPTIONAL_PORT_VALIDATOR = host -> {
 		if (host.contains("/")) {
 			return false;
 		}

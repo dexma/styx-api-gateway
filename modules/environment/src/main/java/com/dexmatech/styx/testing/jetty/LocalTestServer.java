@@ -24,6 +24,7 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 @Slf4j
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -46,6 +47,7 @@ public class LocalTestServer {
 		private byte[] responseBody = new byte[0];
 		private Map<String,String> responseHeaders = new HashMap<>();
 		private Optional<String> virtualHost = Optional.empty();
+		private Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> responseHandler;
 
 		public Builder onPort(int port) {
 			this.port = Optional.of(port);
@@ -88,6 +90,11 @@ public class LocalTestServer {
 			return this;
 		}
 
+		public Builder handlingResponseWith(BiConsumer<HttpServletRequest, HttpServletResponse> handler) {
+			this.responseHandler = Optional.of(handler);
+			return this;
+		}
+
 		public Builder respondingWith( String contentType, byte[] body) {
 			this.responseBody = body;
 			this.responseContentType = contentType;
@@ -105,18 +112,25 @@ public class LocalTestServer {
 				@Override public void handle(String target, Request request, HttpServletRequest httpServletRequest,
 						HttpServletResponse httpServletResponse)
 						throws IOException, ServletException {
-					httpServletResponse.setStatus(responseStatus);
-					responseHeaders.entrySet().forEach(e -> httpServletResponse.addHeader(e.getKey(), e.getValue()));
-					delayInMillis.ifPresent(integer -> {
-						try {
-							Thread.sleep(integer);
-						} catch (InterruptedException e) {
-							log.error("Impossible apply delay", e);
-						}
-					});
-					request.setHandled(true);
-					httpServletResponse.setContentType(responseContentType);
-					httpServletResponse.getOutputStream().write(responseBody);
+
+					if(responseHandler.isPresent()) {
+							responseHandler.get().accept(httpServletRequest, httpServletResponse);
+							request.setHandled(true);
+
+					} else {
+						httpServletResponse.setStatus(responseStatus);
+						responseHeaders.entrySet().forEach(e -> httpServletResponse.addHeader(e.getKey(), e.getValue()));
+						delayInMillis.ifPresent(integer -> {
+							try {
+								Thread.sleep(integer);
+							} catch (InterruptedException e) {
+								log.error("Impossible apply delay", e);
+							}
+						});
+						request.setHandled(true);
+						httpServletResponse.setContentType(responseContentType);
+						httpServletResponse.getOutputStream().write(responseBody);
+					}
 					//					httpServletResponse.getWriter().println("<h1>Hello World</h1>");
 
 				}
