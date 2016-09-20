@@ -47,7 +47,7 @@ public class LocalTestServer {
 		private byte[] responseBody = new byte[0];
 		private Map<String,String> responseHeaders = new HashMap<>();
 		private Optional<String> virtualHost = Optional.empty();
-		private Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> responseHandler;
+		private Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> responseHandler = Optional.empty();
 
 		public Builder onPort(int port) {
 			this.port = Optional.of(port);
