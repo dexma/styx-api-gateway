@@ -3,6 +3,7 @@ package com.dexmatech.styx.core;
 import com.dexmatech.styx.core.http.*;
 import com.dexmatech.styx.core.pipeline.HttpRequestReplyPipeline;
 import com.dexmatech.styx.core.pipeline.stages.routing.DefaultRoutingStage;
+import com.dexmatech.styx.testing.SocketUtils;
 import com.dexmatech.styx.testing.jetty.LocalTestServer;
 import org.junit.Test;
 
@@ -20,9 +21,10 @@ public class TestApiPipelineIT {
 	@Test
 	public void shouldApplyPipelineToAnSimpleRequest() throws Exception {
 		// given
-		LocalTestServer server = setUpLocalServer().build();
+		int availablePort = SocketUtils.findRandomPort();
+		LocalTestServer server = setUpLocalServer().onPort(availablePort).build();
 		HttpRequest request = HttpRequest.get("/", Headers.empty().put(DefaultRoutingStage
-				.DEFAULT_HEADER_USED_TO_ROUTE, "http://localhost:" + server.getRunningPort()));
+				.DEFAULT_HEADER_USED_TO_ROUTE, "http://localhost:" + availablePort));
 
 		ApiPipeline pipeline = ApiPipeline.singlePipeline().using(
 				HttpRequestReplyPipeline.pipeline().applyingDefaultRoutingStage().build()
@@ -41,7 +43,8 @@ public class TestApiPipelineIT {
 	@Test
 	public void shouldApplyPipelineWhenStaticRouteGenerationIsUsed() throws Exception {
 		// given
-		LocalTestServer server = setUpLocalServer().withVirtualHost("virtual.com").build();
+		int availablePort = SocketUtils.findRandomPort();
+		LocalTestServer server = setUpLocalServer().onPort(availablePort).withVirtualHost("virtual.com").build();
 		HttpRequest request = HttpRequest.get("/");
 		ApiPipeline pipeline = ApiPipeline.singlePipeline().using(
 				HttpRequestReplyPipeline
@@ -63,6 +66,7 @@ public class TestApiPipelineIT {
 	@Test
 	public void shouldReportAnErrorWhenPipelineIsAborted() throws Exception {
 		// given
+
 		HttpRequest request = HttpRequest.get("/");
 		List<String> reportedErrors = new ArrayList<>();
 
