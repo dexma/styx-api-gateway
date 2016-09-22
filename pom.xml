@@ -5,7 +5,7 @@
     <groupId>com.dexmatech.styx</groupId>
     <artifactId>styx</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.13-SNAPSHOT</version>
+    <version>1.0.14</version>
 
     <name>Styx API Gateway</name>
     <description>Styx is an async and non-blocking API Gateway.</description>
@@ -121,7 +121,7 @@
             <dependency>
                 <groupId>com.dexmatech.styx</groupId>
                 <artifactId>styx-core</artifactId>
-                <version>1.0.13-SNAPSHOT</version>
+                <version>1.0.14</version>
             </dependency>
 
             <!-- Core Jackson abstractions, basic JSON streaming API implementation -->
@@ -385,6 +385,6 @@
         <connection>scm:git:git://github.com/dexma/styx-api-gateway.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/dexma/styx-api-gateway.git</developerConnection>
         <url>https://github.com/dexma/styx-api-gateway</url>
-      <tag>HEAD</tag>
+      <tag>1.0.14</tag>
   </scm>
 </project>
