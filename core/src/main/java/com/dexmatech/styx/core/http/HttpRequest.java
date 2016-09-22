@@ -69,6 +69,7 @@ public class HttpRequest extends HttpMessage {
 	public String toString() {
 
 		if (log.isDebugEnabled()) {
+
 			boolean thereIsBody = isBodyPresent();
 			return String.format("HttpRequest(%s,%s, payload?%s)", this.getRequestLine(), this.getHeaders(), thereIsBody);
 		} else {

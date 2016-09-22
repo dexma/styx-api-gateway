@@ -19,9 +19,14 @@ import java.util.Optional;
  */
 public class RequestResponseMappers {
 
+	public static final String QUERY_PARAMS_SEPARATOR = "?";
+	public static final String EMPTY = "";
+
 	public static HttpRequest asPipelineRequest(Request grizzlyRequest) throws URISyntaxException {
+		String queryParams = grizzlyRequest.getQueryString()!=null?(QUERY_PARAMS_SEPARATOR +grizzlyRequest.getQueryString()): EMPTY;
+		String requestURI = grizzlyRequest.getRequestURI()+queryParams;
 		RequestLine requestLine = RequestLine.from(
-				grizzlyRequest.getMethod().getMethodString(), grizzlyRequest.getRequestURI(),
+				grizzlyRequest.getMethod().getMethodString(), requestURI,
 				grizzlyRequest.getProtocol().getProtocolString()
 		);
 		return HttpRequest.from(
@@ -50,8 +55,14 @@ public class RequestResponseMappers {
 		for (String key : grizzlyRequest.getHeaderNames()) {
 			map.put(key, grizzlyRequest.getHeader(key));
 		}
-		Optional.ofNullable(grizzlyRequest.getRequest().getRemoteAddress())
-				.ifPresent(remoteAddress -> map.put(Headers.CUSTOM_HEADER_KEY_FOR_CLIENT_IP, remoteAddress));
+		String remoteAddress = null;
+		try {
+			remoteAddress = grizzlyRequest.getRequest().getRemoteAddress();
+		} catch (Exception e) {
+
+		}
+		Optional.ofNullable(remoteAddress)
+				.ifPresent(rm -> map.put(Headers.CUSTOM_HEADER_KEY_FOR_CLIENT_IP, rm));
 		return Headers.from(map);
 	}
 

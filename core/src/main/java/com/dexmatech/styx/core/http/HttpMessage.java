@@ -27,9 +27,9 @@ public abstract class HttpMessage {
 	protected boolean isBodyPresent() {
 		boolean thereIsBody = false;
 		try {
-			thereIsBody = this.getMessageBody().isPresent()
+			thereIsBody = this.getMessageBody()!=null && this.getMessageBody().isPresent()
 					&& (this.getMessageBody().get().available() > 0);
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			log.error("Error trying to know if there is a body present", e);
 		}
 		return thereIsBody;

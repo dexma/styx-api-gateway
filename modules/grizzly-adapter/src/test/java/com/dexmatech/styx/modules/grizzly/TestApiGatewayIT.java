@@ -44,7 +44,7 @@ public class TestApiGatewayIT {
 		// when
 		internalEndpoint.runAndKill(() -> {
 			apiGateway.start();
-			Response response = CLIENT.prepareGet("http://localhost:"+randomPort+"/")
+			Response response = CLIENT.prepareGet("http://localhost:"+randomPort+"/asd?e=4&r=2")
 					.addHeader(DefaultRoutingStage.DEFAULT_HEADER_USED_TO_ROUTE,"http://localhost:"+internalEndpoint.getRunningPort())
 					.execute()
 					.get();
