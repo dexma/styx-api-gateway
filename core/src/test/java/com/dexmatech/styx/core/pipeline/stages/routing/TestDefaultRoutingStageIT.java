@@ -90,7 +90,7 @@ public class TestDefaultRoutingStageIT {
 			StageResult<HttpResponse> result = stage.apply(request).get();
 			// then
 			assertThat(result.isFail(), is(true));
-			assertThat(result.getFail().getStatusLine().getStatusCode(), is(500));
+			assertThat(result.getFail().getStatusLine().getStatusCode(), is(504));
 			assertThat(result.getFailCause(), instanceOf(TimeoutException.class));
 		});
 

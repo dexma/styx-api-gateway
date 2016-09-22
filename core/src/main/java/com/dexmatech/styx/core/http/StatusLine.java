@@ -20,6 +20,7 @@ public class StatusLine {
 	public static final StatusLine UNAUTHORIZED = new StatusLine(HttpMessage.VERSION_HTTP_1_1, 403, "Unauthorized");
 	public static final StatusLine NOT_FOUND = new StatusLine(HttpMessage.VERSION_HTTP_1_1, 404, "Not found");
 	public static final StatusLine TOO_MANY_REQUESTS = new StatusLine(HttpMessage.VERSION_HTTP_1_1, 429, "To Many Requests");
+	public static final StatusLine GATEWAY_TIMEOUT = new StatusLine(HttpMessage.VERSION_HTTP_1_1, 504, "Gateway timeout");
 
 
 	private final String httpVersion;

@@ -21,6 +21,7 @@ public class HttpResponse extends HttpMessage {
 	public static final HttpResponse INTERNAL_SERVER_ERROR = new HttpResponse(StatusLine.INTERNAL_SERVER_ERROR, Headers.empty(), Optional.empty());
 	public static final HttpResponse NOT_FOUND = new HttpResponse(StatusLine.NOT_FOUND, Headers.empty(), Optional.empty());
 	public static final HttpResponse FORBIDDEN = new HttpResponse(StatusLine.FORBIDDEN, Headers.empty(), Optional.empty());
+	public static final HttpResponse GATEWAY_TIMEOUT = new HttpResponse(StatusLine.GATEWAY_TIMEOUT, Headers.empty(), Optional.empty());
 	public static final HttpResponse UNAUTHORIZED = new HttpResponse(StatusLine.UNAUTHORIZED, Headers.empty(), Optional.empty());
 	public static final HttpResponse TOO_MANY_REQUESTS = new HttpResponse(StatusLine.TOO_MANY_REQUESTS, Headers.empty(), Optional.empty());
 
@@ -41,6 +42,10 @@ public class HttpResponse extends HttpMessage {
 
 	public static HttpResponse internalServerError() {
 		return INTERNAL_SERVER_ERROR;
+	}
+
+	public static HttpResponse gatewayTimeout() {
+		return GATEWAY_TIMEOUT;
 	}
 
 	public static HttpResponse toManyRequests() {

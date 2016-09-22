@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.asynchttpclient.*;
 
 import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -36,6 +37,15 @@ public class DefaultRoutingStage {
 					.setFollowRedirect(true)
 					.setRequestTimeout(REQUEST_TIMEOUT_IN_MS)
 					.build();
+
+	public static final Function<Throwable, StageResult<HttpResponse>> PARSE_CLIENT_EXCEPTION = throwable -> {
+		log.debug("Aborting ROUTING stage => ", throwable);
+		if(throwable instanceof TimeoutException || throwable.getCause() instanceof TimeoutException ) {
+			return StageResult.stageFailWith(HttpResponse.gatewayTimeout(), throwable);
+		} else {
+			return StageResult.stageFailWith(HttpResponse.internalServerError(), throwable);
+		}
+	};
 
 	public static Builder usingDefaults() {
 		return new Builder();
@@ -100,10 +110,7 @@ public class DefaultRoutingStage {
 												transformationAfterRouting.map(f -> f.apply(httpRequest, response)).orElse(response)
 										)
 										.thenApply(StageResult::stageSuccessWith)
-										.exceptionally(throwable -> {
-											log.debug("Aborting ROUTING stage => ", throwable);
-											return StageResult.stageFailWith(HttpResponse.internalServerError(), throwable);
-										})
+										.exceptionally(PARSE_CLIENT_EXCEPTION)
 				).orElseGet(() -> {
 							AbortedStage because = AbortedStage.because(String.format("Impossible %s and '%s'", extractingRouteFrom, httpRequest));
 							log.debug("Aborting ROUTING stage => ", because);
