@@ -68,6 +68,7 @@ public class Headers {
 
 	public Headers remove(String key) {
 		HashMap<String, String> headers = new HashMap<>();
+		headers.putAll(map);
 		headers.remove(key);
 		return new Headers(Collections.unmodifiableMap(headers));
 	}

@@ -8,8 +8,9 @@ import com.dexmatech.styx.core.pipeline.HttpRequestReplyPipeline;
  */
 public class Runner {
 	public static void main(String[] args) {
-		ApiGateway.runningOverGrizzly().withDefaultServerRunningOnPort(8081).withPipeline(ApiSinglePipeline.singlePipeline().using
+		ApiGateway.runningOverGrizzly().withDefaultServerRunningOnPort(8080).withPipeline(ApiSinglePipeline.singlePipeline().using
 				(HttpRequestReplyPipeline.pipeline()
+						.applyingStaticHostOnRouteGeneration("api.pre.dexcell.com")
 				.applyingDefaultRoutingStage()
 				.build()
 		).build()).build()

@@ -4,12 +4,14 @@ import com.dexmatech.styx.core.http.Headers;
 import com.dexmatech.styx.core.http.HttpRequest;
 import com.dexmatech.styx.core.http.HttpResponse;
 import com.dexmatech.styx.core.http.StatusLine;
+import com.dexmatech.styx.core.http.utils.ByteBufferInputStream;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders;
 import org.asynchttpclient.Request;
 import org.asynchttpclient.RequestBuilder;
 import org.asynchttpclient.Response;
 
+import java.io.ByteArrayInputStream;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -19,6 +21,9 @@ import static java.util.stream.Collectors.toMap;
  * Created by aortiz on 7/09/16.
  */
 public class HttpMappers {
+
+	public static final String TRANSFER_ENCODING_HEADER = "Transfer-Encoding";
+	public static final String CONTENT_LENGTH_HEADER = "Content-Length";
 
 	public static Request asClientRequest(String url,HttpRequest request) {
 		RequestBuilder builder = new RequestBuilder()
@@ -46,9 +51,20 @@ public class HttpMappers {
 			StatusLine statusLine = StatusLine.from(
 					httpVersion, response.getStatusCode(), response.getStatusText()
 			);
-			Headers headers = asHeaders(response.getHeaders());
+			Headers headers = asHeaders(response.getHeaders()).remove(TRANSFER_ENCODING_HEADER);
 			if(response.hasResponseBody()) {
-				return HttpResponse.from(statusLine, headers, response.getResponseBodyAsStream());
+
+
+//				response.getResponseBodyAsByteBuffer()
+
+
+
+//				Headers handledChunked = headers
+//						.remove(TRANSFER_ENCODING_HEADER)
+//						.put(CONTENT_LENGTH_HEADER,String.valueOf(responseBodyAsBytes.length));
+//				return HttpResponse.from(statusLine, handledChunked, new ByteArrayInputStream(responseBodyAsBytes));
+//				return HttpResponse.from(statusLine, headers, response.getResponseBodyAsStream());
+				return HttpResponse.from(statusLine, headers, new ByteBufferInputStream(response.getResponseBodyAsByteBuffer()));
 			} else {
 				return HttpResponse.from(statusLine, headers);
 			}

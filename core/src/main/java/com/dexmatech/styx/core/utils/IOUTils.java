@@ -6,12 +6,12 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 /**
  * Created by aortiz on 9/08/16.
  */
 public class IOUTils {
+
 
 	public static void fastCopy(final InputStream src, final OutputStream dest) throws IOException {
 		final ReadableByteChannel inputChannel = Channels.newChannel(src);
@@ -22,7 +22,7 @@ public class IOUTils {
 	public static void fastCopy(final ReadableByteChannel src, final WritableByteChannel dest) throws IOException {
 		final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
 
-		while(src.read(buffer) != -1) {
+		while (src.read(buffer) != -1) {
 			buffer.flip();
 			dest.write(buffer);
 			buffer.compact();
@@ -30,12 +30,12 @@ public class IOUTils {
 
 		buffer.flip();
 
-		while(buffer.hasRemaining()) {
+		while (buffer.hasRemaining()) {
 			dest.write(buffer);
 		}
 	}
 
-	public static String toString(final InputStream inputStream)  {
+	public static String toString(final InputStream inputStream) {
 		Scanner s = new Scanner(inputStream).useDelimiter("\\A");
 		String result = s.hasNext() ? s.next() : "";
 		return result;

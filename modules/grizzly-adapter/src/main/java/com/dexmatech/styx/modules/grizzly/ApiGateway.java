@@ -78,6 +78,7 @@ public class ApiGateway {
 					httpServer.orElseGet( () -> {
 						HttpServer httpServer = new HttpServer();
 						NetworkListener listener = new NetworkListener("grizzly", "0.0.0.0", new PortRange(port));
+//						listener.setChunkingEnabled(false);
 						httpServer.addListener(listener);
 						return httpServer;
 					}),

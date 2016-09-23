@@ -36,10 +36,11 @@ public class RequestResponseMappers {
 
 	public static void mapResponseFields(HttpResponse styxResponse, Response grizzlyResponse) throws URISyntaxException, IOException {
 		grizzlyResponse.setStatus(styxResponse.getStatusLine().getStatusCode());
+		copyHeaders(styxResponse, grizzlyResponse);
 		if (styxResponse.getMessageBody().isPresent()) {
+			//			grizzlyResponse.getOutputBuffer().w
 			IOUTils.fastCopy(styxResponse.getMessageBody().get(), grizzlyResponse.getOutputStream());
 		}
-		copyHeaders(styxResponse, grizzlyResponse);
 	}
 
 	public static void copyHeaders(HttpResponse styxResponse, Response grizzlyResponse) {
@@ -47,7 +48,7 @@ public class RequestResponseMappers {
 				.getHeaders()
 				.toMap()
 				.entrySet()
-				.forEach(entry -> grizzlyResponse.addHeader(entry.getKey(), entry.getValue()));
+				.forEach(entry -> grizzlyResponse.getResponse().addHeader(entry.getKey(), entry.getValue()));
 	}
 
 	public static Headers extractAndConvertHeaders(Request grizzlyRequest) {
