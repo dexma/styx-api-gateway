@@ -135,7 +135,7 @@ public class ClientResponse {
 				}
 
 				@Override public ByteBuffer getResponseBodyAsByteBuffer() {
-					throw UNSUPPORTED_OPERATION_EXCEPTION;
+					return ByteBuffer.wrap(bodyAsBytes);
 				}
 
 				@Override public InputStream getResponseBodyAsStream() {
