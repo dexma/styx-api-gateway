@@ -46,6 +46,8 @@ public class DefaultRoutingStage {
 			return StageResult.stageFailWith(HttpResponse.internalServerError(), throwable);
 		}
 	};
+	public static final String HOST_HEADER_TO_REMOVE = "host";
+	public static final String CAPITALIZED_HOST_HEADER_TO_REMOVE = "Host";
 
 	public static Builder usingDefaults() {
 		return new Builder();
@@ -96,23 +98,25 @@ public class DefaultRoutingStage {
 
 			return httpRequest -> {
 
-				Optional<String> urlToRedirect = extractRouteFromRequest.apply(httpRequest);
+				HttpRequest request = httpRequest.removeHeader(HOST_HEADER_TO_REMOVE).removeHeader(CAPITALIZED_HOST_HEADER_TO_REMOVE);
+
+				Optional<String> urlToRedirect = extractRouteFromRequest.apply(request);
 
 				Function<Response, HttpResponse> responseToResponseMapper = HttpMappers
-						.generateResponseMapperFromHttpVersion(httpRequest.getRequestLine().getHttpVersion());
+						.generateResponseMapperFromHttpVersion(request.getRequestLine().getHttpVersion());
 
 				return urlToRedirect.map(
 						url ->
-								client.executeRequest(HttpMappers.asClientRequest(url, httpRequest))
+								client.executeRequest(HttpMappers.asClientRequest(url, request))
 										.toCompletableFuture()
 										.thenApply(responseToResponseMapper)
 										.thenApply(response ->
-												transformationAfterRouting.map(f -> f.apply(httpRequest, response)).orElse(response)
+												transformationAfterRouting.map(f -> f.apply(request, response)).orElse(response)
 										)
 										.thenApply(StageResult::stageSuccessWith)
 										.exceptionally(PARSE_CLIENT_EXCEPTION)
 				).orElseGet(() -> {
-							AbortedStage because = AbortedStage.because(String.format("Impossible %s and '%s'", extractingRouteFrom, httpRequest));
+							AbortedStage because = AbortedStage.because(String.format("Impossible %s and '%s'", extractingRouteFrom, request));
 							log.debug("Aborting ROUTING stage => ", because);
 							return StageResult.completeStageFailingWith(HttpResponse.internalServerError(), because);
 						}

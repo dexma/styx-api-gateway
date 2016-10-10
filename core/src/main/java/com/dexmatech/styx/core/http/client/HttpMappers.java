@@ -23,7 +23,6 @@ import static java.util.stream.Collectors.toMap;
 public class HttpMappers {
 
 	public static final String TRANSFER_ENCODING_HEADER = "Transfer-Encoding";
-	public static final String CONTENT_LENGTH_HEADER = "Content-Length";
 
 	public static Request asClientRequest(String url,HttpRequest request) {
 		RequestBuilder builder = new RequestBuilder()
@@ -54,16 +53,6 @@ public class HttpMappers {
 			Headers headers = asHeaders(response.getHeaders()).remove(TRANSFER_ENCODING_HEADER);
 			if(response.hasResponseBody()) {
 
-
-//				response.getResponseBodyAsByteBuffer()
-
-
-
-//				Headers handledChunked = headers
-//						.remove(TRANSFER_ENCODING_HEADER)
-//						.put(CONTENT_LENGTH_HEADER,String.valueOf(responseBodyAsBytes.length));
-//				return HttpResponse.from(statusLine, handledChunked, new ByteArrayInputStream(responseBodyAsBytes));
-//				return HttpResponse.from(statusLine, headers, response.getResponseBodyAsStream());
 				return HttpResponse.from(statusLine, headers, new ByteBufferInputStream(response.getResponseBodyAsByteBuffer()));
 			} else {
 				return HttpResponse.from(statusLine, headers);

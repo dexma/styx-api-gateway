@@ -72,6 +72,21 @@ public class TestRoutablePipeline {
 
 	}
 
+
+	@Test
+	public void shouldHandleRequestMatchingByPathWhenPathMatchWithComplexRegex() throws URISyntaxException {
+		// given
+		RoutablePipeline pipeline = RoutablePipeline.matchingRequestsByPathRegexPattern(".*(/v3/ping|/v3/app-status|/v3/info|/v3/oauth).*")
+				.using
+						(PIPELINE).build();
+		HttpRequest request = HttpRequest.get("http://www.as.com/v3/ping");
+		// when
+		boolean handle = pipeline.canHandle(request);
+		// then
+		assertThat(handle, is(true));
+
+	}
+
 	@Test
 	public void shouldHandleRequestMatchingByPathWhenPathMatchWithQueryParams() throws URISyntaxException {
 		// given

@@ -97,4 +97,23 @@ public class TestPipelineRequestRouterDefaultImpl {
 		assertThat(pipelineAssigned,is(BY_PATH_PIPELINE));
 	}
 
+
+	@Test
+	public void shouldRouteRequestToPipelineByPathWithComplexRegexExpression() throws URISyntaxException {
+		// given
+		RoutablePipeline complexRegexPath = RoutablePipeline
+				.matchingRequestsByPathRegexPattern(".*(/v3/ping|/v3/app-status|/v3/info|/v3/oauth).*")
+				.using(PIPELINE)
+				.build();
+		IPipelineRequestRouter router = PipelineRequestRouterDefaultImpl.from(
+				Arrays.asList(
+						complexRegexPath,
+						DEFAULT_ROUTABLE_PIPELINE)
+		);
+		// when
+		RoutablePipeline pipelineAssigned = router.route(HttpRequest.get("http://www.dexcell.com:8080/v3/ping"));
+		// then
+		assertThat(pipelineAssigned,is(complexRegexPath));
+	}
+
 }
