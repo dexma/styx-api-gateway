@@ -29,7 +29,7 @@ public class TestServerSideDiscoveryStageBuilder {
 				.build();
 
 		// then
-		assertThat(stage, notNullValue());
+		assertThat("Stage was null", stage, notNullValue());
 	}
 
 	@Test(expected = NullPointerException.class)

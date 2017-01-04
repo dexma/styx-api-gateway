@@ -27,7 +27,7 @@ public class TestHostSelector {
 		String host = hostSelector.hostToRoute(request);
 
 		//then
-		assertThat(host, is("default.host"));
+		assertThat("Host was wrong", host, is("default.host"));
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class TestHostSelector {
 		String host = hostSelector.hostToRoute(request);
 
 		//then
-		assertThat(host, is("default.host"));
+		assertThat("Host was wrong",host, is("default.host"));
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class TestHostSelector {
 		String host = hostSelector.hostToRoute(request);
 
 		//then
-		assertThat(host, is("first.host"));
+		assertThat("Host was wrong",host, is("first.host"));
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class TestHostSelector {
 		String host = hostSelector.hostToRoute(request);
 
 		//then
-		assertThat(host, is("first.host"));
+		assertThat("Host was wrong",host, is("first.host"));
 	}
 
 }

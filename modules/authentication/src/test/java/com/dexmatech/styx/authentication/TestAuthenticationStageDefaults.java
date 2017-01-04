@@ -11,7 +11,7 @@ import java.util.function.Function;
 import static com.dexmatech.styx.authentication.AuthenticationStageDefaults.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by aortiz on 15/09/16.
@@ -29,9 +29,9 @@ public class TestAuthenticationStageDefaults {
 		// when
 		Headers headers = PERMISSIONS_TO_HEADER.apply(permissions);
 		//then
-		assertThat(headers.toMap().entrySet(),hasSize(1));
-		assertThat(headers.contains(DEFAULT_PERMISSIONS_HEADER_KEY),is(true));
-		assertThat(headers.get(DEFAULT_PERMISSIONS_HEADER_KEY),is("users:R,users:W,items:R"));
+		assertThat("Expected headers size was wrong", headers.toMap().entrySet(), hasSize(1));
+		assertThat("Headers did not contain permission header", headers.contains(DEFAULT_PERMISSIONS_HEADER_KEY), is(true));
+		assertThat("Header permission had wrong value", headers.get(DEFAULT_PERMISSIONS_HEADER_KEY), is("users:R,users:W,items:R"));
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class TestAuthenticationStageDefaults {
 		// when
 		Headers headers = PERMISSIONS_TO_HEADER.apply(permissions);
 		//then
-		assertThat(headers.toMap().entrySet(),hasSize(0));
+		assertThat("Expected headers was not empty", headers.toMap().entrySet(), hasSize(0));
 
 	}
 
@@ -50,24 +50,24 @@ public class TestAuthenticationStageDefaults {
 	public void shouldConvertMetaInfoToHeaders() {
 
 		// given
-		MetaInfo  metaInfo = MetaInfo.initWith("account", "3333").put("client", "wwww");
+		MetaInfo metaInfo = MetaInfo.initWith("account", "3333").put("client", "wwww");
 		// when
 		Headers headers = PARSE_METAINFO_TO_HEADERS.apply(metaInfo);
 		//then
-		assertThat(headers.toMap().entrySet(),hasSize(2));
-		assertThat(headers.contains(CUSTOM_HEADER_PREFIX+"account"),is(true));
-		assertThat(headers.contains(CUSTOM_HEADER_PREFIX+"client"),is(true));
+		assertThat("Expected headers size was wrong", headers.toMap().entrySet(), hasSize(2));
+		assertThat("Headers did not contain account header", headers.contains(CUSTOM_HEADER_PREFIX + "account"), is(true));
+		assertThat("Headers did not contain client header", headers.contains(CUSTOM_HEADER_PREFIX + "client"), is(true));
 	}
 
 	@Test
 	public void shouldConvertToEmptyHeadersWhenEmptyMetaInfo() {
 
 		// given
-		MetaInfo  metaInfo = MetaInfo.empty();
+		MetaInfo metaInfo = MetaInfo.empty();
 		// when
 		Headers headers = PARSE_METAINFO_TO_HEADERS.apply(metaInfo);
 		//then
-		assertThat(headers.toMap().entrySet(),hasSize(0));
+		assertThat("Expected headers was not empty",headers.toMap().entrySet(), hasSize(0));
 
 	}
 

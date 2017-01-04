@@ -15,7 +15,7 @@ public class TestPermission {
 		// when
 		Permission permission = Permission.of("USER", "READ");
 		// then
-		assertThat(permission, notNullValue());
+		assertThat("Permission was null", permission, notNullValue());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

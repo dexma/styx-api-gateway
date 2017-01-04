@@ -17,7 +17,7 @@ public class TestHeaders {
 		// when
 		Headers headerWithSomething = headersEmpty.put("header-key", "y");
 		// then
-		assertThat(headersEmpty.equals(headerWithSomething), is(false));
+		assertThat("Headers were wrong", headersEmpty.equals(headerWithSomething), is(false));
 	}
 
 
@@ -28,8 +28,8 @@ public class TestHeaders {
 		// when
 		Headers changedHeaders = originalHeaders.put("header-key", "x");
 		// then
-		assertThat(originalHeaders.get("header-key"), is("y"));
-		assertThat(changedHeaders.get("header-key"), is("x"));
+		assertThat("Original headers header with 'header-key' was wrong", originalHeaders.get("header-key"), is("y"));
+		assertThat("Changed headers header with 'header-key' was wrong", changedHeaders.get("header-key"), is("x"));
 	}
 
 }

@@ -26,7 +26,7 @@ public class TestApiPipelineBuilder {
 				.using(pipeline().applyingDefaultRoutingStage().build())
 				.build();
 		// Then
-		assertThat(apiPipeline, notNullValue());
+		assertThat("Api pipeline was null", apiPipeline, notNullValue());
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class TestApiPipelineBuilder {
 				).build();
 
 		// Then
-		assertThat(apiPipeline, notNullValue());
+		assertThat("Api pipeline was null", apiPipeline, notNullValue());
 	}
 
 	@Test
@@ -69,6 +69,6 @@ public class TestApiPipelineBuilder {
 				.build();
 
 		// Then
-		assertThat(apiPipeline, notNullValue());
+		assertThat("Api pipeline was null", apiPipeline, notNullValue());
 	}
 }

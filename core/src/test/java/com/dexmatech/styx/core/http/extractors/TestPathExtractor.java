@@ -24,8 +24,8 @@ public class TestPathExtractor {
 		// when
 		Optional<String> path = PathExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(path.isPresent(), is(true));
-		assertThat(path.get(), is("/"));
+		assertThat("Path was empty", path.isPresent(), is(true));
+		assertThat("Path was wrong", path.get(), is("/"));
 	}
 
 	@Test
@@ -35,8 +35,8 @@ public class TestPathExtractor {
 		// when
 		Optional<String> path = PathExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(path.isPresent(), is(true));
-		assertThat(path.get(), is("/soccer"));
+		assertThat("Path was empty", path.isPresent(), is(true));
+		assertThat("Path was wrong", path.get(), is("/soccer"));
 	}
 
 	@Test
@@ -48,8 +48,8 @@ public class TestPathExtractor {
 		// when
 		Optional<String> path = PathExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(path.isPresent(), is(true));
-		assertThat(path.get(), is("/path"));
+		assertThat("Path was empty", path.isPresent(), is(true));
+		assertThat("Path was wrong", path.get(), is("/path"));
 	}
 
 
@@ -62,8 +62,8 @@ public class TestPathExtractor {
 		// when
 		Optional<String> path = PathExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(path.isPresent(), is(true));
-		assertThat(path.get(), is("*"));
+		assertThat("Path was empty", path.isPresent(), is(true));
+		assertThat("Path was wrong", path.get(), is("*"));
 	}
 
 }

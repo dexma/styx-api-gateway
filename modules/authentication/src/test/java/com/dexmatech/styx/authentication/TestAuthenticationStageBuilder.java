@@ -21,9 +21,10 @@ public class TestAuthenticationStageBuilder {
 	@Test
 	public void shouldCreateAnStageWithDefaults() {
 		// when
-		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticationProvider(AUTHENTICATION_PROVIDER).build();
+		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token")
+				.withAuthenticationProvider(AUTHENTICATION_PROVIDER).build();
 		// then
-		assertThat(stage, notNullValue());
+		assertThat("Stage was null", stage, notNullValue());
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -43,7 +44,7 @@ public class TestAuthenticationStageBuilder {
 				.generatingPermissionHeadersWith(permissions -> null)
 				.build();
 		// then
-		assertThat(stage, notNullValue());
+		assertThat("Stage was null", stage, notNullValue());
 	}
 
 }

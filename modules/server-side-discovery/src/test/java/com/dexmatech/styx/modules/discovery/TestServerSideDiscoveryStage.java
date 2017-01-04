@@ -27,9 +27,11 @@ public class TestServerSideDiscoveryStage {
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().contains(DEFAULT_HEADER), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().get(DEFAULT_HEADER), is("http://api.service.dmz/"));
+		assertThat("Stage was not succeed", stageResult.isSuccess(), is(true));
+		assertThat("Response did not contain default route header", stageResult.getSuccess().getHeaders().contains(DEFAULT_HEADER), is
+				(true));
+		assertThat("Response route header value was wrong", stageResult.getSuccess().getHeaders().get(DEFAULT_HEADER), is("http://api"
+				+ ".service.dmz/"));
 	}
 
 	@Test
@@ -44,9 +46,11 @@ public class TestServerSideDiscoveryStage {
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().contains("X-custom-route"), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().get("X-custom-route"), is("http://api.service.dmz/"));
+		assertThat("Stage was not succeed", stageResult.isSuccess(), is(true));
+		assertThat("Response did not contain custom route header", stageResult.getSuccess().getHeaders().contains("X-custom-route"), is
+				(true));
+		assertThat("Response route header value was wrong", stageResult.getSuccess().getHeaders().get("X-custom-route"),
+				is("http://api.service.dmz/"));
 	}
 
 	@Test
@@ -55,15 +59,17 @@ public class TestServerSideDiscoveryStage {
 		HttpRequest httpRequest = HttpRequest.get("/some_path?param=1");
 		RequestPipelineStage stage = ServerSideDiscoveryStage
 				.usingDefaults()
-				.withHostRoutingRule("/some_path.*","api2.service.dmz")
+				.withHostRoutingRule("/some_path.*", "api2.service.dmz")
 				.withDefaultHostRule("api.service.dmz")
 				.build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().contains(DEFAULT_HEADER), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().get(DEFAULT_HEADER), is("http://api2.service.dmz/some_path?param=1"));
+		assertThat("Stage was not succeed", stageResult.isSuccess(), is(true));
+		assertThat("Response did not contain default route header", stageResult.getSuccess().getHeaders().contains(DEFAULT_HEADER),
+				is(true));
+		assertThat("Response route header value was wrong", stageResult.getSuccess().getHeaders().get(DEFAULT_HEADER),
+				is("http://api2.service.dmz/some_path?param=1"));
 	}
 
 	@Test
@@ -78,9 +84,10 @@ public class TestServerSideDiscoveryStage {
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(false));
-		assertThat(stageResult.getFail().getStatusLine().getStatusCode(), is(404));
-		assertThat(stageResult.getFailCause().getMessage(), is("Aborting stage because path '/apiv3/users' is in blacklist '[/apiv3/users.*]'"));
+		assertThat("Stage was not failed", stageResult.isSuccess(), is(false));
+		assertThat("Fail status code was not '404'", stageResult.getFail().getStatusLine().getStatusCode(), is(404));
+		assertThat("Fail message was wrong", stageResult.getFailCause().getMessage(), is("Aborting stage because path '/apiv3/users' is "
+				+ "in blacklist '[/apiv3/users.*]'"));
 	}
 
 	@Test
@@ -96,9 +103,10 @@ public class TestServerSideDiscoveryStage {
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(false));
-		assertThat(stageResult.getFail().getStatusLine().getStatusCode(), is(403));
-		assertThat(stageResult.getFailCause().getMessage(), is("Aborting stage because path '/apiv3/users' is in blacklist '[/apiv3/users.*]'"));
+		assertThat("Stage was not failed", stageResult.isSuccess(), is(false));
+		assertThat("Fail status code was not '403'", stageResult.getFail().getStatusLine().getStatusCode(), is(403));
+		assertThat("Fail message was wrong", stageResult.getFailCause().getMessage(),
+				is("Aborting stage because path '/apiv3/users' is in blacklist '[/apiv3/users.*]'"));
 	}
 
 }

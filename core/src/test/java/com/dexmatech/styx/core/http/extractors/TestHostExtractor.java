@@ -24,8 +24,8 @@ public class TestHostExtractor {
 		// when
 		Optional<String> host = HostExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(host.isPresent(), is(true));
-		assertThat(host.get(), is("www.as.com"));
+		assertThat("Host was empty", host.isPresent(), is(true));
+		assertThat("Host was wrong", host.get(), is("www.as.com"));
 	}
 
 	@Test
@@ -35,48 +35,47 @@ public class TestHostExtractor {
 		// when
 		Optional<String> host = HostExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(host.isPresent(), is(true));
-		assertThat(host.get(), is("www.as.com"));
+		assertThat("Host was empty", host.isPresent(), is(true));
+		assertThat("Host was wrong", host.get(), is("www.as.com"));
 	}
-
 
 	@Test
 	public void shouldExtractHostWhenRelativeRequestedURIAndHostHeaderIsProvided() throws URISyntaxException {
 		// given
-		Map<String,String> headers = new HashMap<>();
-		headers.put("Host","www.some_host.com");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Host", "www.some_host.com");
 		HttpRequest httpRequest = HttpRequest.get("/path", Headers.from(headers));
 		// when
 		Optional<String> host = HostExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(host.isPresent(), is(true));
-		assertThat(host.get(), is("www.some_host.com"));
+		assertThat("Host was empty", host.isPresent(), is(true));
+		assertThat("Host was wrong", host.get(), is("www.some_host.com"));
 	}
 
 	@Test
 	public void shouldExtractHostWhenAbsoluteRequestedURIAndHostHeaderIsProvided() throws URISyntaxException {
 		// given
-		Map<String,String> headers = new HashMap<>();
-		headers.put("Host","https://www.as.com");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Host", "https://www.as.com");
 		HttpRequest httpRequest = HttpRequest.get("https://www.as.com", Headers.from(headers));
 		// when
 		Optional<String> host = HostExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(host.isPresent(), is(true));
-		assertThat(host.get(), is("www.as.com"));
+		assertThat("Host was empty", host.isPresent(), is(true));
+		assertThat("Host was wrong", host.get(), is("www.as.com"));
 	}
 
 	@Test
 	public void shouldExtractHostWhenAsterikURIAndHostHeaderIsProvided() throws URISyntaxException {
 		// given
-		Map<String,String> headers = new HashMap<>();
-		headers.put("Host","www.some_host.com");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Host", "www.some_host.com");
 		HttpRequest httpRequest = HttpRequest.get("*", Headers.from(headers));
 		// when
 		Optional<String> host = HostExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(host.isPresent(), is(true));
-		assertThat(host.get(), is("www.some_host.com"));
+		assertThat("Host was empty", host.isPresent(), is(true));
+		assertThat("Host was wrong", host.get(), is("www.some_host.com"));
 	}
 
 	@Test
@@ -86,7 +85,7 @@ public class TestHostExtractor {
 		// when
 		Optional<String> host = HostExtractor.INSTANCE.extract(httpRequest);
 		// then
-		assertThat(host.isPresent(), is(false));
+		assertThat("Host was present",host.isPresent(), is(false));
 	}
 
 }

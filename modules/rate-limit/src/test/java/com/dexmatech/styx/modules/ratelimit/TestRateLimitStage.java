@@ -46,7 +46,7 @@ public class TestRateLimitStage {
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(true));
+		assertThat("Stage was not succeed", stageResult.isSuccess(), is(true));
 	}
 
 	@Test
@@ -57,10 +57,12 @@ public class TestRateLimitStage {
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isFail(), is(true));
-		assertThat(stageResult.getFail().getStatusLine().getStatusCode(), is(403));
-		assertThat(stageResult.getFailCause().getMessage(), startsWith("Impossible to eval rate limit, can't extract key from"));
-		assertThat(IOUTils.toString(stageResult.getFail().getMessageBody().get()), is( "RATE LIMIT KEY CAN NOT BE EXTRACTED"));
+		assertThat("Stage was not failed", stageResult.isFail(), is(true));
+		assertThat("Fail response status code was not '403'", stageResult.getFail().getStatusLine().getStatusCode(), is(403));
+		assertThat("Fail cause was wrong", stageResult.getFailCause().getMessage(), startsWith("Impossible to eval rate limit, can't "
+				+ "extract key from"));
+		assertThat("Fail body message was wrong", IOUTils.toString(stageResult.getFail().getMessageBody().get()), is("RATE LIMIT "
+				+ "KEY CAN NOT BE EXTRACTED"));
 
 	}
 
@@ -72,10 +74,9 @@ public class TestRateLimitStage {
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isFail(), is(true));
-		assertThat(stageResult.getFail().getStatusLine().getStatusCode(), is(429));
-		assertThat(stageResult.getFailCause().getMessage(), is("Rate limit reached for key 'XXX'"));
-
+		assertThat("Stage was not failed", stageResult.isFail(), is(true));
+		assertThat("Fail response status code was not '429'", stageResult.getFail().getStatusLine().getStatusCode(), is(429));
+		assertThat("Fail cause was wrong", stageResult.getFailCause().getMessage(), is("Rate limit reached for key 'XXX'"));
 
 	}
 

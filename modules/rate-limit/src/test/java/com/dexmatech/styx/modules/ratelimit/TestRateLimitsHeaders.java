@@ -31,13 +31,14 @@ public class TestRateLimitsHeaders {
 		// when
 		Headers headers = RateLimitsHeaders.asHeaders(status);
 		// then
-		assertThat(headers.size(), is(6));
-		assertThat(headers.get(HEADER_PREFIX + "Hour" + HEADER_LIMIT_SUFFIX), is("1000"));
-		assertThat(headers.get(HEADER_PREFIX + "Hour" + HEADER_RESET_SUFFIX), is("10"));
-		assertThat(headers.get(HEADER_PREFIX + "Hour" + HEADER_REMAINING_SUFFIX), is("80"));
-		assertThat(headers.get(HEADER_PREFIX + "Day" + HEADER_LIMIT_SUFFIX), is("2000"));
-		assertThat(headers.get(HEADER_PREFIX + "Day" + HEADER_RESET_SUFFIX), is("20"));
-		assertThat(headers.get(HEADER_PREFIX + "Day" + HEADER_REMAINING_SUFFIX), is("160"));
+		assertThat("Headers size was not as expected", headers.size(), is(6));
+		assertThat("Hourly rate limit header value was wrong", headers.get(HEADER_PREFIX + "Hour" + HEADER_LIMIT_SUFFIX), is("1000"));
+		assertThat("Hourly rate limit header reset value was wrong", headers.get(HEADER_PREFIX + "Hour" + HEADER_RESET_SUFFIX), is("10"));
+		assertThat("Hourly rate limit header remaining was wrong", headers.get(HEADER_PREFIX + "Hour" + HEADER_REMAINING_SUFFIX), is
+				("80"));
+		assertThat("Daily rate limit header value was wrong", headers.get(HEADER_PREFIX + "Day" + HEADER_LIMIT_SUFFIX), is("2000"));
+		assertThat("Daily rate limit header reset was wrong", headers.get(HEADER_PREFIX + "Day" + HEADER_RESET_SUFFIX), is("20"));
+		assertThat("Daily rate limit header remaining was wrong", headers.get(HEADER_PREFIX + "Day" + HEADER_REMAINING_SUFFIX), is("160"));
 	}
 
 	@Test
@@ -47,7 +48,7 @@ public class TestRateLimitsHeaders {
 		// when
 		Headers headers = RateLimitsHeaders.asHeaders(status);
 		// then
-		assertThat(headers.size(), is(0));
+		assertThat("Headers were not empty",headers.size(), is(0));
 
 	}
 
@@ -60,7 +61,7 @@ public class TestRateLimitsHeaders {
 		// when
 		HttpResponse finalResponse = COPY_RATELIMIT_HEADERS_TO_RESPONSE.apply(request, response);
 		// then
-		assertThat(finalResponse.getHeaders().size(), is(1));
-		assertThat(finalResponse.getHeaders().get(HEADER_PREFIX + "Hour" + HEADER_LIMIT_SUFFIX), is("1000"));
+		assertThat("Headers size was not as expected",finalResponse.getHeaders().size(), is(1));
+		assertThat("Hourly rate limit header value was wrong",finalResponse.getHeaders().get(HEADER_PREFIX + "Hour" + HEADER_LIMIT_SUFFIX), is("1000"));
 	}
 }

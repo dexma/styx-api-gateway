@@ -3,8 +3,8 @@ package com.dexmatech.styx.core.http.client;
 import com.dexmatech.styx.core.http.Headers;
 import com.dexmatech.styx.core.http.HttpRequest;
 import com.dexmatech.styx.core.http.HttpResponse;
-import com.dexmatech.styx.testing.asynchttpclient.ClientResponse;
 import com.dexmatech.styx.core.utils.IOUTils;
+import com.dexmatech.styx.testing.asynchttpclient.ClientResponse;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders;
 import org.asynchttpclient.Request;
@@ -32,9 +32,9 @@ public class TestHttpMappers {
 		// when
 		HttpHeaders clientHeaders = HttpMappers.asClientHeaders(headers);
 		// then
-		assertThat(clientHeaders.entries().size(), is(2));
-		assertThat(clientHeaders.get("header-1"), is("value-1"));
-		assertThat(clientHeaders.get("header-2"), is("value-2"));
+		assertThat("Headers size was wrong", clientHeaders.entries().size(), is(2));
+		assertThat("Header with key 'header-1' was wrong value", clientHeaders.get("header-1"), is("value-1"));
+		assertThat("Header with key 'header-2' was wrong value", clientHeaders.get("header-2"), is("value-2"));
 	}
 
 	@Test
@@ -44,9 +44,9 @@ public class TestHttpMappers {
 		// when
 		Headers headers = HttpMappers.asHeaders(clientHeaders);
 		// then
-		assertThat(headers.toMap().entrySet().size(), is(2));
-		assertThat(headers.get("header-1"), is("value-1"));
-		assertThat(headers.get("header-2"), is("value-2"));
+		assertThat("Headers size was wrong", headers.toMap().entrySet().size(), is(2));
+		assertThat("Header with key 'header-1' was wrong value", headers.get("header-1"), is("value-1"));
+		assertThat("Header with key 'header-2' was wrong value", headers.get("header-2"), is("value-2"));
 	}
 
 	@Test
@@ -55,12 +55,12 @@ public class TestHttpMappers {
 		Headers headers = Headers.empty().put("header-1", "value-1").put("header-2", "value-2");
 		HttpRequest request = HttpRequest.get("", headers);
 		// when
-		Request clientRequest = HttpMappers.asClientRequest("http://localhost",request);
+		Request clientRequest = HttpMappers.asClientRequest("http://localhost", request);
 		// then
-		assertThat(clientRequest, notNullValue());
-		assertThat(clientRequest.getHeaders().get("header-1"), is("value-1"));
-		assertThat(clientRequest.getHeaders().get("header-2"), is("value-2"));
-		assertThat(clientRequest.getUrl(), is("http://localhost"));
+		assertThat("Request was null", clientRequest, notNullValue());
+		assertThat("Header with key 'header-1' was wrong value",clientRequest.getHeaders().get("header-1"), is("value-1"));
+		assertThat("Header with key 'header-2' was wrong value",clientRequest.getHeaders().get("header-2"), is("value-2"));
+		assertThat("Url was not as expected", clientRequest.getUrl(), is("http://localhost"));
 
 	}
 
@@ -73,11 +73,11 @@ public class TestHttpMappers {
 		// when
 		HttpResponse response = mapper.apply(clientResponse);
 		// then
-		assertThat(response, notNullValue());
-		assertThat(response.getHeaders().get("header-1"), is("value-1"));
-		assertThat(response.getHeaders().get("header-2"), is("value-2"));
-		assertThat(response.getMessageBody().isPresent(), is(true));
-		assertThat(response.getMessageBody().map(IOUTils::toString).orElse("$"), is("Hello world"));
+		assertThat("Request was null",response, notNullValue());
+		assertThat("Header with key 'header-1' was wrong value",response.getHeaders().get("header-1"), is("value-1"));
+		assertThat("Header with key 'header-2' was wrong value",response.getHeaders().get("header-2"), is("value-2"));
+		assertThat("Message body was empty", response.getMessageBody().isPresent(), is(true));
+		assertThat("Message body was wrong", response.getMessageBody().map(IOUTils::toString).orElse("$"), is("Hello world"));
 
 	}
 
@@ -90,10 +90,10 @@ public class TestHttpMappers {
 		// when
 		HttpResponse response = mapper.apply(clientResponse);
 		// then
-		assertThat(response, notNullValue());
-		assertThat(response.getHeaders().get("header-1"), is("value-1"));
-		assertThat(response.getHeaders().get("header-2"), is("value-2"));
-		assertThat(response.getMessageBody().isPresent(), is(false));
+		assertThat("Request was null",response, notNullValue());
+		assertThat("Header with key 'header-1' was wrong value",response.getHeaders().get("header-1"), is("value-1"));
+		assertThat("Header with key 'header-2' was wrong value",response.getHeaders().get("header-2"), is("value-2"));
+		assertThat("Message body was present",response.getMessageBody().isPresent(), is(false));
 
 	}
 

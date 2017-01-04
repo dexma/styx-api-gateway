@@ -16,7 +16,7 @@ public class TestRateLimitStageBuilder {
 		// when
 		RequestPipelineStage stage = RateLimitStage.rateByHeader("X-token").withRateLimitProvider(key -> null).build();
 		// then
-		assertThat(stage, notNullValue());
+		assertThat("Stage was null", stage, notNullValue());
 	}
 
 	@Test(expected = NullPointerException.class)

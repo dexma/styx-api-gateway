@@ -39,68 +39,72 @@ public class TestAuthenticationStage {
 	@Test
 	public void shouldCompleteStageAuthenticating() throws Exception {
 		// given
-		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
-		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticationProvider(SUCCESS_AUTHENTICATION_PROVIDER).build();
+		HttpRequest httpRequest = HttpRequest.get("/", Headers.from("X-token", "XXX"));
+		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token")
+				.withAuthenticationProvider(SUCCESS_AUTHENTICATION_PROVIDER).build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(true));
+		assertThat("Stage was not succeed", stageResult.isSuccess(), is(true));
 	}
 
 	@Test
 	public void shouldAbortStageWhenTokenIsNotPresentAuthenticationFails() throws Exception {
 		// given
 		HttpRequest httpRequest = HttpRequest.get("/");
-		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticationProvider(FAIL_AUTHENTICATION_PROVIDER).build();
+		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token")
+				.withAuthenticationProvider(FAIL_AUTHENTICATION_PROVIDER).build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isFail(), is(true));
-		assertThat(stageResult.getFail().getStatusLine().getStatusCode(), is(401));
-		assertThat(stageResult.getFailCause().getMessage(), startsWith("Authentication fail, impossible extract token from "));
+		assertThat("Stage was not failed", stageResult.isFail(), is(true));
+		assertThat("Fail status code was not '401'", stageResult.getFail().getStatusLine().getStatusCode(), is(401));
+		assertThat("Fail cause was not as expected", stageResult.getFailCause().getMessage(), startsWith("Authentication fail, impossible "
+				+ "extract token from "));
 
 	}
-
 
 	@Test
 	public void shouldAbortStageWhenAuthenticationFails() throws Exception {
 		// given
-		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
-		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token").withAuthenticationProvider(FAIL_AUTHENTICATION_PROVIDER).build();
+		HttpRequest httpRequest = HttpRequest.get("/", Headers.from("X-token", "XXX"));
+		RequestPipelineStage stage = AuthenticationStage.authenticationByToken("X-token")
+				.withAuthenticationProvider(FAIL_AUTHENTICATION_PROVIDER).build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isFail(), is(true));
-		assertThat(stageResult.getFail().getStatusLine().getStatusCode(), is(401));
-		assertThat(stageResult.getFailCause().getMessage(), startsWith("Authentication fail on "));
+		assertThat("Stage was not failed", stageResult.isFail(), is(true));
+		assertThat("Fail status code was not '401'", stageResult.getFail().getStatusLine().getStatusCode(), is(401));
+		assertThat("Fail cause was not as expected", stageResult.getFailCause().getMessage(), startsWith("Authentication fail on "));
 
 	}
 
 	@Test
 	public void shouldAbortStageWithACustomResponseWhenAuthenticationFails() throws Exception {
 		// given
-		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
+		HttpRequest httpRequest = HttpRequest.get("/", Headers.from("X-token", "XXX"));
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
 				.withAuthenticationProvider(FAIL_AUTHENTICATION_PROVIDER)
-				.whenAuthenticationFailsRespondWith(r-> HttpResponse.from(StatusLine.UNAUTHORIZED,Headers.empty(),new ByteArrayInputStream("AUTH FAILS".getBytes
-						())))
+				.whenAuthenticationFailsRespondWith(
+						r -> HttpResponse.from(StatusLine.UNAUTHORIZED, Headers.empty(), new ByteArrayInputStream("AUTH FAILS".getBytes
+								())))
 				.build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isFail(), is(true));
-		assertThat(stageResult.getFail().getStatusLine().getStatusCode(), is(403));
-		assertThat(stageResult.getFailCause().getMessage(), startsWith("Authentication fail on "));
-		assertThat(stageResult.getFail().getMessageBody().isPresent(), is( true));
-		assertThat(IOUTils.toString(stageResult.getFail().getMessageBody().get()), is( "AUTH FAILS"));
+		assertThat("Stage was not failed", stageResult.isFail(), is(true));
+		assertThat("Fail status code was not '403'", stageResult.getFail().getStatusLine().getStatusCode(), is(403));
+		assertThat("Fail cause was not as expected", stageResult.getFailCause().getMessage(), startsWith("Authentication fail on "));
+		assertThat("Fail message body was not present", stageResult.getFail().getMessageBody().isPresent(), is(true));
+		assertThat("Fail message body was wrong", IOUTils.toString(stageResult.getFail().getMessageBody().get()), is("AUTH FAILS"));
 	}
 
 	@Test
 	public void shouldCompleteStageAddingPermissionsAndMetaInfoHeaders() throws Exception {
 
 		// given
-		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
+		HttpRequest httpRequest = HttpRequest.get("/", Headers.from("X-token", "XXX"));
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
 				.withAuthenticationProvider(SUCCESS_FROM.apply(new Principal(
@@ -111,31 +115,33 @@ public class TestAuthenticationStage {
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().toMap().entrySet(), hasSize(3));
-		assertThat(stageResult.getSuccess().getHeaders().contains(DEFAULT_PERMISSIONS_HEADER_KEY), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().get(DEFAULT_PERMISSIONS_HEADER_KEY), is("users:R,users:W"));
-		assertThat(stageResult.getSuccess().getHeaders().contains(CUSTOM_HEADER_PREFIX + "account"), is(true));
+		assertThat("Stage was not succeed", stageResult.isSuccess(), is(true));
+		assertThat("Response headers size was wrong", stageResult.getSuccess().getHeaders().toMap().entrySet(), hasSize(3));
+		assertThat("Response headers did not contain permission header", stageResult.getSuccess().getHeaders().contains
+				(DEFAULT_PERMISSIONS_HEADER_KEY), is(true));
+		assertThat("Response permission header valkue was wrong value", stageResult.getSuccess().getHeaders().get
+				(DEFAULT_PERMISSIONS_HEADER_KEY), is("users:R,users:W"));
+		assertThat("Response headers did not contain account header", stageResult.getSuccess().getHeaders().contains(CUSTOM_HEADER_PREFIX +
+				"account"), is(true));
 	}
-
-
 
 	@Test
 	public void shouldCompleteStageAddingPermissionsHeadersWhenCustomPermissionHeadersGeneratorIsProvided() throws Exception {
 
 		// given
-		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
+		HttpRequest httpRequest = HttpRequest.get("/", Headers.from("X-token", "XXX"));
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
 				.withAuthenticationProvider(SUCCESS_AUTHENTICATION_PROVIDER)
-				.generatingPermissionHeadersWith(permissions -> Headers.from("X-custom-permission",""))
+				.generatingPermissionHeadersWith(permissions -> Headers.from("X-custom-permission", ""))
 				.build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().toMap().entrySet(), hasSize(2));
-		assertThat(stageResult.getSuccess().getHeaders().contains("X-custom-permission"), is(true));
+		assertThat("Stage was not succeed", stageResult.isSuccess(), is(true));
+		assertThat("Response headers size was wrong", stageResult.getSuccess().getHeaders().toMap().entrySet(), hasSize(2));
+		assertThat("Response headers did not contain custom header", stageResult.getSuccess().getHeaders().contains("X-custom-permission")
+				, is(true));
 
 	}
 
@@ -143,18 +149,18 @@ public class TestAuthenticationStage {
 	public void shouldCompleteStageAddingMetaInfoHeadersWhenCustomMetaInfoHeadersGeneratorIsProvided() throws Exception {
 
 		// given
-		HttpRequest httpRequest = HttpRequest.get("/",Headers.from("X-token","XXX"));
+		HttpRequest httpRequest = HttpRequest.get("/", Headers.from("X-token", "XXX"));
 		RequestPipelineStage stage = AuthenticationStage
 				.authenticationByToken("X-token")
 				.withAuthenticationProvider(SUCCESS_AUTHENTICATION_PROVIDER)
-				.generatingMetaInfoHeadersWith(metaInfo-> Headers.from("X-meta",""))
+				.generatingMetaInfoHeadersWith(metaInfo -> Headers.from("X-meta", ""))
 				.build();
 		// when
 		StageResult<HttpRequest> stageResult = stage.apply(httpRequest).get();
 		// then
-		assertThat(stageResult.isSuccess(), is(true));
-		assertThat(stageResult.getSuccess().getHeaders().toMap().entrySet(), hasSize(2));
-		assertThat(stageResult.getSuccess().getHeaders().contains("X-meta"), is(true));
+		assertThat("Stage was not succeed", stageResult.isSuccess(), is(true));
+		assertThat("Response headers size was wrong", stageResult.getSuccess().getHeaders().toMap().entrySet(), hasSize(2));
+		assertThat("Response headers did not contain custom header", stageResult.getSuccess().getHeaders().contains("X-meta"), is(true));
 
 	}
 

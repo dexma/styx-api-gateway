@@ -34,8 +34,8 @@ public class TestApiPipelineIT {
 		server.runAndKill(() -> {
 			HttpResponse reply = pipeline.reply(request).get();
 			// then
-			assertThat(reply, notNullValue());
-			assertThat(reply.getStatusLine().getStatusCode(), is(200));
+			assertThat("Reply response was null", reply, notNullValue());
+			assertThat("Reply response status code was not '200'", reply.getStatusLine().getStatusCode(), is(200));
 		});
 
 	}
@@ -57,8 +57,8 @@ public class TestApiPipelineIT {
 		server.runAndKill(() -> {
 			HttpResponse reply = pipeline.reply(request).get();
 			// then
-			assertThat(reply, notNullValue());
-			assertThat(reply.getStatusLine().getStatusCode(), is(200));
+			assertThat("Reply response was null",reply, notNullValue());
+			assertThat("Reply response status code was not '200'", reply.getStatusLine().getStatusCode(), is(200));
 		});
 
 	}
@@ -81,10 +81,10 @@ public class TestApiPipelineIT {
 		// when
 		HttpResponse reply = pipeline.reply(request).get();
 		// then
-		assertThat(reply, notNullValue());
-		assertThat(reply.getStatusLine().getStatusCode(), is(500));
-		assertThat(reportedErrors.size(), is(1));
-		assertThat(reportedErrors.get(0), startsWith("Impossible extract route from header "));
+		assertThat("Reply response was null",reply, notNullValue());
+		assertThat("Reply response status code was not '500'",reply.getStatusLine().getStatusCode(), is(500));
+		assertThat("Array with reported errors had wrong size",reportedErrors.size(), is(1));
+		assertThat("Reported error message was wrong",reportedErrors.get(0), startsWith("Impossible extract route from header "));
 	}
 
 }

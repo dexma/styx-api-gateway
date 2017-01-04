@@ -17,7 +17,7 @@ public class TestHostRoutingRule {
 		// when
 		HostRoutingRule rule = HostRoutingRule.from(".*", "abc.dexma.dmz");
 		// then
-		assertThat(rule, notNullValue());
+		assertThat("Rule was null", rule, notNullValue());
 	}
 
 	@Test(expected = PatternSyntaxException.class)
@@ -31,7 +31,7 @@ public class TestHostRoutingRule {
 		// when
 		HostRoutingRule rule = HostRoutingRule.defaultHostRule("abc.dexma.dmz");
 		// then
-		assertThat(rule, notNullValue());
+		assertThat("Rule was null", rule, notNullValue());
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class TestHostRoutingRule {
 		// when
 		HostRoutingRule rule = HostRoutingRule.defaultHostRule("abc.dexma.dmz");
 		// then
-		assertThat(rule, notNullValue());
+		assertThat("Rule was null", rule, notNullValue());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

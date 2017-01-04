@@ -21,7 +21,7 @@ public class TestApiGatewayBuilder {
 	}
 
 	@Test
-	public void shouldCreateSimplestGateway(){
+	public void shouldCreateSimplestGateway() {
 		// given
 		ApiPipeline apiPipeline = ApiPipeline
 				.singlePipeline()
@@ -31,11 +31,11 @@ public class TestApiGatewayBuilder {
 		ApiGateway apiGateway = ApiGateway.runningOverGrizzly().withPipeline(apiPipeline).build();
 
 		// Then
-		assertThat(apiGateway, notNullValue());
+		assertThat("Gateway was null", apiGateway, notNullValue());
 	}
 
 	@Test
-	public void shouldCreateGatewayChangingDefaults(){
+	public void shouldCreateGatewayChangingDefaults() {
 		// given
 		ApiPipeline apiPipeline = ApiPipeline
 				.singlePipeline()
@@ -49,9 +49,8 @@ public class TestApiGatewayBuilder {
 				.withPipeline(apiPipeline)
 				.build();
 
-
 		// Then
-		assertThat(apiGateway, notNullValue());
+		assertThat("Gateway was null", apiGateway, notNullValue());
 	}
 
 }
