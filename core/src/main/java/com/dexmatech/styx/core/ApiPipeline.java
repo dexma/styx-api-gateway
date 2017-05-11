@@ -2,6 +2,7 @@ package com.dexmatech.styx.core;
 
 import com.dexmatech.styx.core.http.HttpRequest;
 import com.dexmatech.styx.core.http.HttpResponse;
+import com.dexmatech.styx.core.metrics.Metrics;
 import com.dexmatech.styx.core.pipeline.HttpRequestReplyPipeline;
 import com.dexmatech.styx.core.pipeline.routable.PipelineRequestRouterDefaultImpl;
 import com.dexmatech.styx.core.pipeline.routable.RoutablePipeline;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -34,13 +36,20 @@ public abstract class ApiPipeline {
 
 		private HttpRequestReplyPipeline pipeline;
 
+		private Optional<Metrics> metrics = Optional.empty();
+
 		public SinglePipelineBuilder using(HttpRequestReplyPipeline pipeline) {
 			this.pipeline = pipeline;
 			return this;
 		}
 
+		public SinglePipelineBuilder addMetrics(Metrics metrics) {
+			this.metrics = Optional.ofNullable(metrics);
+			return this;
+		}
+
 		public ApiPipeline build() {
-			ApiSinglePipeline apiSinglePipeline = new ApiSinglePipeline(pipeline);
+			ApiSinglePipeline apiSinglePipeline = new ApiSinglePipeline(pipeline,metrics);
 			log.info("[PIPELINE] Single pipeline handling all incoming requests was successfully created");
 			return apiSinglePipeline;
 		}
@@ -50,6 +59,8 @@ public abstract class ApiPipeline {
 
 		private List<RoutablePipeline> routablePipelines;
 
+		private Optional<Metrics> metrics = Optional.empty();
+
 		public MultiPipelineBuilder addPipeline(RoutablePipeline pipeline) {
 			if (this.routablePipelines == null) {
 				this.routablePipelines = new ArrayList<>();
@@ -58,8 +69,13 @@ public abstract class ApiPipeline {
 			return this;
 		}
 
+		public MultiPipelineBuilder addMetrics(Metrics metrics) {
+			this.metrics = Optional.ofNullable(metrics);
+			return this;
+		}
+
 		public ApiPipeline build() {
-			ApiMultiPipeline apiMultiPipeline = new ApiMultiPipeline(PipelineRequestRouterDefaultImpl.from(routablePipelines));
+			ApiMultiPipeline apiMultiPipeline = new ApiMultiPipeline(PipelineRequestRouterDefaultImpl.from(routablePipelines),metrics);
 			routablePipelines.forEach(
 					p -> log.info(String.format("[PIPELINE] '%s' all incoming requests was successfully created", p))
 			);
