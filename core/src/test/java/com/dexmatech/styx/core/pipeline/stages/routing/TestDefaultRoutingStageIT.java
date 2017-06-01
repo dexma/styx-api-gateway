@@ -15,6 +15,8 @@ import org.junit.Test;
 
 import java.net.ConnectException;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.dexmatech.styx.testing.jetty.LocalTestServer.setUpLocalServer;
 import static org.hamcrest.CoreMatchers.*;
@@ -112,7 +114,12 @@ public class TestDefaultRoutingStageIT {
 		assertThat(result.isFail(), is(true));
 		assertThat(result.getFail().getStatusLine().getStatusCode(), is(500));
 		assertThat(result.getFailCause(), instanceOf(ConnectException.class));
-		assertThat(result.getFailCause().getMessage(), is("Connection refused: localhost/127.0.0.1:5555"));
+
+		Pattern connectionRefusedMessagePattern = Pattern.compile("Connection refused: localhost\\/[0-9\\.:]+:5555");
+		Matcher matcher = connectionRefusedMessagePattern.matcher(result.getFailCause().getMessage());
+
+		assertThat("Should have returned failure message similar to 'Connection refused: localhost/127.0.0.1:5555'",matcher.find(), is
+				(true));
 
 	}
 
